@@ -1,19 +1,89 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed|Ubuntu:300,400,700');
+@import url('https://fonts.googleapis.com/css?family=Monoton');
+
 body {
     text-align: center;
+    font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;
+    background-color: #333;
+}
+
+#painter {
+    position: relative;
+    background-color: #efefef;
+    max-width: 1000px;
+    margin: 3% auto 3% auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0px 5px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
 }
 
 h1 {
-    font-family: Monoton;
-    font-size: 70px;
-    margin: 0.2em;
+    position: relative;
+    font: 2em Monoton;
+    margin: 0;
+    color: #444;
+    background-color: #bbb;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+
+#tool_panel {
+    position: relative;
+    width: 100%;
+    display: table;
+    background-color: #ddd;
+    background: #bbbbbb;
+    background: -moz-linear-gradient(top, #bbb 1%, #999 100%);
+    background: -webkit-linear-gradient(top, #bbb 1%,#999 100%);
+    background: linear-gradient(to bottom, #bbb 1%,#999 100%);
+}
+
+.tool {
+    display: table-cell;
+    font-size: 0.6em;
 }
 
 h2 {
-    margin: 1em 0 0.25em;
+    margin: 0;
+    padding: 1.5% 0 1.5% 0;
+    font-size: 1.2em;
 }
 
-h2:first-of-type {
-    margin-top: 0.5em;
+.tool_options {
+    box-sizing: border-box;
+    padding: 0 0 1.5% 0;
+}
+
+.tool input,
+label {
+    font: 1.1em 'Ubuntu Condensed';
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    height: 20px;
+}
+
+.tool_options input[type="number"],
+.tool_options input[type="color"] {
+    width: 40px;
+}
+
+#board {
+    box-sizing: border-box;
+    position: relative;
+    min-height: 400px;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0 2% 2% 2%;
+    background-color: #efefef;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
 }
 
 table,
@@ -22,7 +92,16 @@ td {
     border: none;
 }
 
-.borderedCells {
+#pixel_canvas {
+    position: relative;
+    margin: 2% auto 0 auto;
+    background-color: #fff;
+    -webkit-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
+    -moz-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
+    box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
+}
+
+.bordered_cells {
     border: 1px solid black;
 }
 
@@ -39,6 +118,3 @@ td {
     width: 20px;
 }
 
-input[type=number] {
-    width: 6em;
-}
