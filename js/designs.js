@@ -10,14 +10,14 @@
   let color = colorPicker.val();
   let backgroundColor = backgroundColorPicker.val();
   let borderColor = borderColorPicker.val();
-
+  let displayBorders = true;
   // Sets color value on colorPicker change
   colorPicker.on('change', function colorChangeHandler() {
     color = $(this).val();
   });
 
   /**
-   * @description Creates grid
+   * @description Draw grid
    * @param {number} height - number of rows
    * @param {number} width - number of columns
    */
@@ -62,7 +62,9 @@
 
   $('#border_switcher').on('click', function cellBorderSwitchHandler() {
     pixelCanvas.find('td').toggleClass('bordered_cells');
-});
+    $(this).attr('value', (displayBorders) ? 'Show:' : 'Hide:');
+    displayBorders = !displayBorders;
+  });
 
   borderColorPicker.on('change', function borderColorChangeHandler() {
     borderColor = $(this).val();
@@ -80,16 +82,30 @@
   });
 
   $('#background_cleaner').on('click', function cellBackgroundCleanHandler() {
+    backgroundColorPicker[0].value = backgroundColor;
+    const oldBackgroundColor = backgroundColor;
+    backgroundColor = '#ffffff';
+    pixelCanvas.find('td').each(function filterCellsWithOldBackground(index, el) {
+      if (rgb2hex($(el).css('background-color')) === oldBackgroundColor) {
+        $(el).css('background-color', backgroundColor);
+      }
+    });
+  });
+
+  $('#brush_cleaner').on('click', function cellBackgroundCleanHandler() {
     pixelCanvas.find('td').css('background-color', backgroundColor);
   });
 
-  $('#reset_painter').on('click', function resetPainter() {
+  $('#clear_canvas').on('click', function resetPainter() {
     backgroundColor = '#ffffff';
     color = '#000000';
     borderColor = '#000000';
     colorPicker[0].value = color;
     backgroundColorPicker[0].value = backgroundColor;
     borderColorPicker[0].value = borderColor;
+    displayBorders = true;
+    pixelCanvas.find('td').toggleClass('bordered_cells');
+    $('#border_switcher').attr('value', 'Hide:');
     pixelCanvas.find('td').css({
       'background-color': backgroundColor,
       'color': color,

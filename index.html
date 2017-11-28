@@ -16,7 +16,7 @@
                         <input type="number" id="input_height" name="height" min="1" max="100" value="1">
                         <label for="input_width">Width:</label>
                         <input type="number" id="input_width" name="width" min="1" max="100" value="1">
-                        <input type="submit" class="submit" value="Draw">
+                        <input type="submit" class="submit tool_button" value="Draw">
                     </form>
                 </div>
             </div>
@@ -25,6 +25,8 @@
                 <div class="tool_options">
                     <label for="background_color_picker">Pick a color:</label>
                     <input type="color" id="background_color_picker" value="#ffffff">
+                    <label for="background_cleaner">Background:</label>
+                    <input type="button" id="background_cleaner" value="Clear" class="tool_button">
                 </div>
             </div>
             <div class="tool">
@@ -32,8 +34,8 @@
                 <div class="tool_options">
                     <label for="border_color_picker">Pick a color:</label>
                     <input type="color" id="border_color_picker">
-                    <label for="border_switcher">Remove borders:</label>
-                    <input type="button" name="borders" value="Borders" id="border_switcher">
+                    <label for="border_switcher">Borders:</label>
+                    <input type="button" name="borders" value="Hide" id="border_switcher" class="tool_button">
                 </div>
             </div>
             <div class="tool">
@@ -41,15 +43,15 @@
                 <div class="tool_options">
                     <label for="color_picker">Pick a color:</label>
                     <input type="color" id="color_picker">
-                    <label for="background_cleaner">Clear painting:</label>
-                    <input type="button" name="clean" value="Clear" id="background_cleaner">
+                    <label for="brush_cleaner">Painting:</label>
+                    <input type="button" name="clean" value="Clear" id="brush_cleaner" class="tool_button">
                 </div>
             </div>
             <div class="tool">
-                <h2>Reset painter:</h2>
+                <h2>Reset canvas:</h2>
                 <div class="tool_options">
-                    <label for="reset_painter">Reset painter:</label>
-                    <input type="button" name="reset" id="reset_painter" value="Reset">
+                    <label for="clear_canvas">Canvas:</label>
+                    <input type="button" name="clear" id="clear_canvas" value="Clear" class="tool_button">
                 </div>
             </div>
         </div>
