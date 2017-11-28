@@ -4,3 +4,5 @@
 /.idea/
 /learn/
 redwoods_state_park.jpg
+!/vendor
+/vendor/*
