@@ -145,7 +145,7 @@ $( document ).ready(function() {
 
     // Creates the grid based on entered values, when grid size is submitted
     $('.submit').on('click', function setDimensionsHandler(event) {
-      event.preventDefault();
+      event.preventDefault();     
       const height = $('#input_height').val();
       const width = $('#input_width').val();
 
@@ -165,6 +165,49 @@ $( document ).ready(function() {
         event.preventDefault();
         pixelCanvas.off('mouseover', 'td', paintHandler);
       });
+    });
+    
+    // Creates image to download
+    $('#create_image').on('click', function createImageFromTableHandler() {
+      const width = pixelCanvas.width();
+      const height = pixelCanvas.height();
+      const cellWidth = pixelCanvas.find('td').width();
+      const cellHeight = pixelCanvas.find('tr').height();
+      const canvasHTML = '<canvas id="canvas" width="'+ width +'" height="'+ height +'"></canvas>';
+      $('body').append(canvasHTML);      
+      
+      const canvas = document.getElementById('canvas');
+      let ctx = canvas.getContext('2d');
+      pixelCanvas.css('border-collapse','collapse');
+      pixelCanvas.find('tr').css('height', '20px');
+      pixelCanvas.find('td').css('width', '20px');
+      if(displayBorders) {
+        pixelCanvas.find('td').css('border', '1px solid '+ borderColor);
+      }      
+      
+      const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ width +'" height="'+ height +'">' +
+           '<foreignObject width="100%" height="100%">' +
+           '<div xmlns="http://www.w3.org/1999/xhtml">' +
+           pixelCanvas.prop('outerHTML') +
+           '</div>' +
+           '</foreignObject>' +
+           '</svg>';
+
+      //const DOMURL = window.URL || window.webkitURL || window;      
+      const img = new Image();
+      const saveCanvas = document.getElementById('save');
+      //img.setAttribute('crossOrigin', 'anonymous');
+      //const svg = new Blob([data], {type: 'image/svg+xml'});
+      //const url = DOMURL.createObjectURL(svg);
+      img.onload = function() {        
+        ctx.drawImage(img, 0, 0);
+        $('#save').attr('href', canvas.toDataURL('image/png'));
+        //DOMURL.revokeObjectURL(url);
+        saveCanvas.click();
+      };       
+
+      img.src = data;     
+      //this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
     });
   })();
 });

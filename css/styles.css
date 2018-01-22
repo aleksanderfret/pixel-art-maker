@@ -160,3 +160,7 @@ td {
     width: 20px;
 }
 
+#save {
+  display: none;
+}
+
