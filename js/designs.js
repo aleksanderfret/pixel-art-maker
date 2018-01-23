@@ -6,18 +6,42 @@ $( document ).ready(function() {
     const colorPicker = $('#color_picker');
     const backgroundColorPicker = $('#background_color_picker');
     const borderColorPicker = $('#border_color_picker');
+    const pixelCanvasInputHeight = $('#input_height');
+    const pixelCanvasInputWidth = $('#input_width');
 
     // Captures initial values from DOM elements
     const initialBrushColor = colorPicker.val();
     const initialBackgroundColor = backgroundColorPicker.val();
     const initialBorderColor = borderColorPicker.val();
+    const initialColsNumber = pixelCanvasInputWidth.val();
+    const initialRowsNumber = pixelCanvasInputHeight.val();
+    const initialCellSize = 20;
 
     // Sets current values based on initial values
+    let colsNumber = initialColsNumber;
+    let rowsNumber = initialRowsNumber;
+    let cellSize = initialCellSize;
     let brushColor = initialBrushColor;
     let backgroundColor = initialBackgroundColor;
     let borderColor = initialBorderColor;
     let displayBorders = true;
+    
 
+    function calculateCellSize(colNumber) {
+      const canvasWidth = $('#board').width();
+      const cellWidthCalculation = Math.round(canvasWidth/colNumber);
+      cellSize = ( cellWidthCalculation < initialCellSize ) ? cellWidthCalculation : initialCellSize;
+      console.log(cellSize);
+      return cellSize;      
+    }
+    
+    function setCellSize(cellContainer, cellDimension) {
+      cellContainer.find('td').css({        
+        'width': cellDimension,
+        'height': cellDimension
+      });
+    }
+    
     /**
      * @description Draws grid
      * @param {number} height - number of rows
@@ -32,14 +56,21 @@ $( document ).ready(function() {
           grid += '<td></td>';
         }
         grid += '</tr>';
-      }
-      pixelCanvas.html(grid);
+      }      
+      pixelCanvas.html(grid);       
       pixelCanvas.find('td').addClass('bordered_cells').css({
         'border-color': borderColor,
         'background-color': backgroundColor
-      });
+      });      
+      setCellSize(pixelCanvas, calculateCellSize(width));
     }
-
+    
+    
+    
+    $(window).on('resize', function cellSizeChangeHandler() {
+      setCellSize(pixelCanvas, calculateCellSize(colsNumber));
+    })
+    
     /**
      * @description Converts rgb color to hex color
      * @param {string} rgb - rgb color
@@ -146,10 +177,10 @@ $( document ).ready(function() {
     // Creates the grid based on entered values, when grid size is submitted
     $('.submit').on('click', function setDimensionsHandler(event) {
       event.preventDefault();     
-      const height = $('#input_height').val();
-      const width = $('#input_width').val();
+      colsNumber = pixelCanvasInputWidth.val();
+      rowsNumber = pixelCanvasInputHeight.val();
 
-      makeGrid(height, width);
+      makeGrid(rowsNumber, colsNumber);
     });
 
     // Starts painting
@@ -168,46 +199,52 @@ $( document ).ready(function() {
     });
     
     // Creates image to download
-    $('#create_image').on('click', function createImageFromTableHandler() {
-      const width = pixelCanvas.width();
-      const height = pixelCanvas.height();
-      const cellWidth = pixelCanvas.find('td').width();
-      const cellHeight = pixelCanvas.find('tr').height();
-      const canvasHTML = '<canvas id="canvas" width="'+ width +'" height="'+ height +'"></canvas>';
-      $('body').append(canvasHTML);      
+    $('#create_image').on('click', function createImageFromTableHandler(event) {
+      event.preventDefault();      
       
-      const canvas = document.getElementById('canvas');
-      let ctx = canvas.getContext('2d');
-      pixelCanvas.css('border-collapse','collapse');
-      pixelCanvas.find('tr').css('height', '20px');
-      pixelCanvas.find('td').css('width', '20px');
+      // Helper variables (when using HTML inside svg there are problem with cell borders)
+      const strokeWidth = 1;
+      const correctedCellSize = cellSize - strokeWidth*3;
+      const correctedWidth = cellSize*colsNumber+strokeWidth;
+      const correctedHeight = cellSize*rowsNumber+strokeWidth;
+      
+      // Creates a canvas element
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute("id", "canvas");
+      canvas.setAttribute("width", correctedWidth);
+      canvas.setAttribute("height", correctedHeight);     
+      
+      // Copy pixelCanvas element
+      const pixelCanvasCopy =  pixelCanvas.clone(true);
+      pixelCanvasCopy.css('border-collapse','collapse');
+      pixelCanvasCopy.find('td').css({
+        'width': correctedCellSize,
+        'height': correctedCellSize
+      });
       if(displayBorders) {
-        pixelCanvas.find('td').css('border', '1px solid '+ borderColor);
-      }      
+        pixelCanvasCopy.find('td').css('border', '1px solid '+ borderColor);
+      }  
       
-      const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ width +'" height="'+ height +'">' +
+      //creates an saves image
+      const ctx = canvas.getContext('2d');
+      console.log(pixelCanvasCopy.prop('outerHTML'));
+      const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ correctedWidth +'" height="'+ correctedHeight +'">' +
            '<foreignObject width="100%" height="100%">' +
            '<div xmlns="http://www.w3.org/1999/xhtml">' +
-           pixelCanvas.prop('outerHTML') +
+           pixelCanvasCopy.prop('outerHTML') +
            '</div>' +
            '</foreignObject>' +
            '</svg>';
-
-      //const DOMURL = window.URL || window.webkitURL || window;      
       const img = new Image();
       const saveCanvas = document.getElementById('save');
-      //img.setAttribute('crossOrigin', 'anonymous');
-      //const svg = new Blob([data], {type: 'image/svg+xml'});
-      //const url = DOMURL.createObjectURL(svg);
       img.onload = function() {        
         ctx.drawImage(img, 0, 0);
         $('#save').attr('href', canvas.toDataURL('image/png'));
-        //DOMURL.revokeObjectURL(url);
         saveCanvas.click();
-      };       
-
-      img.src = data;     
-      //this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+      }; 
+      img.src = data;
     });
+    
+    makeGrid(rowsNumber, colsNumber);
   })();
 });

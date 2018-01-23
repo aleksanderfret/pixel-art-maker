@@ -10,13 +10,13 @@
     <h1>Lab: Pixel Art Maker</h1>
     <div id="tool_panel">
         <div class="tool">
-            <h2>Grid size</h2>
+            <h2>Grid</h2>
             <div class="tool_options">
                 <form id="size_picker">
                     <label for="input_height">Height:</label>
-                    <input type="number" id="input_height" name="height" min="1" max="100" value="1">
+                    <input type="number" id="input_height" name="height" min="1" max="100" value="10">
                     <label for="input_width">Width:</label>
-                    <input type="number" id="input_width" name="width" min="1" max="100" value="1">
+                    <input type="number" id="input_width" name="width" min="1" max="100" value="10">
                     <input type="submit" class="submit tool_button" value="Draw">
                 </form>
             </div>
@@ -54,7 +54,7 @@
         <div class="tool">
             <h2>Image</h2>
             <div class="tool_options">
-              <a id="create_image" class="tool_button" download="canvas.png">Download</a>
+              <input type="button" name="save" id="create_image" value="Save" class="tool_button">
             </div>
         </div>      
     </div>
@@ -63,7 +63,7 @@
           <table id="pixel_canvas"></table>      
     </div>
 </div>
-<a href="#" id="save" class="tool_button" download="canvas.png">Download</a>
+<a href="#" id="save" class="tool_button" download="pixel-art_maker.png">Download</a>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="js/designs.js"></script>
 </body>
