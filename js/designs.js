@@ -15,26 +15,34 @@ $( document ).ready(function() {
     const initialBorderColor = borderColorPicker.val();
     const initialColsNumber = pixelCanvasInputWidth.val();
     const initialRowsNumber = pixelCanvasInputHeight.val();
-    const initialCellSize = 20;
+    const initialCellDimension = 20;
 
     // Sets current values based on initial values
     let colsNumber = initialColsNumber;
     let rowsNumber = initialRowsNumber;
-    let cellSize = initialCellSize;
+    let cellDimension = initialCellDimension;
     let brushColor = initialBrushColor;
     let backgroundColor = initialBackgroundColor;
     let borderColor = initialBorderColor;
     let displayBorders = true;
     
-
-    function calculateCellSize(colNumber) {
-      const canvasWidth = $('#board').width();
-      const cellWidthCalculation = Math.round(canvasWidth/colNumber);
-      cellSize = ( cellWidthCalculation < initialCellSize ) ? cellWidthCalculation : initialCellSize;
-      console.log(cellSize);
-      return cellSize;      
+    /**
+     * @description Calculates cell dimension to fit square grid to screen
+     * @param {number} colNumber - number of columns
+     * @return {number}
+     */
+    function calculateCellDimension(colNumber) {
+      const boardWidth = $('#board').width();
+      const cellWidthCalculated = Math.round(boardWidth/colNumber);
+      cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
+      return cellDimension;      
     }
     
+    /**
+     * @description Sets size of pixel-art's square cells
+     * @param {object} cellContainer
+     * @param {number} cellDimension
+     */
     function setCellSize(cellContainer, cellDimension) {
       cellContainer.find('td').css({        
         'width': cellDimension,
@@ -62,14 +70,8 @@ $( document ).ready(function() {
         'border-color': borderColor,
         'background-color': backgroundColor
       });      
-      setCellSize(pixelCanvas, calculateCellSize(width));
+      setCellSize(pixelCanvas, calculateCellDimension(width));
     }
-    
-    
-    
-    $(window).on('resize', function cellSizeChangeHandler() {
-      setCellSize(pixelCanvas, calculateCellSize(colsNumber));
-    })
     
     /**
      * @description Converts rgb color to hex color
@@ -96,17 +98,64 @@ $( document ).ready(function() {
         }
       });
     }
-
+        
     /**
-     * @description Changes color of the grid cell
-     * @param {object} event
+     * @description Prepares svg data with canvas (needed for saving as image)
+     * @param {string} canvasHTML
+     * @param {number} width
+     * @param {number} height
+     * @return {string}
      */
-    function paintHandler(event) {
-      event.preventDefault();
-      $(event.target).css('background-color', brushColor);
+    function prepareSvgData(canvasHTML, width, height) {
+      const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ width +'" height="'+ height +'">' +
+           '<foreignObject width="100%" height="100%">' +
+           '<div xmlns="http://www.w3.org/1999/xhtml">' +
+           canvasHTML +
+           '</div>' +
+           '</foreignObject>' +
+           '</svg>';
+      return data;
     }
+    
+    /**
+     * @description Creates pixelCanvas copy with inline styles
+     * @param {number} cellWidth
+     * @param {number} cellHeight
+     * @return {object}
+     */
+    function createPixelCanvasCopy(cellWidth, cellHeight) {
+      const pixelCanvasCopy =  pixelCanvas.clone(true);
+      pixelCanvasCopy.css('border-collapse','collapse');
+      pixelCanvasCopy.find('td').css({
+        'width': cellWidth,
+        'height': cellHeight
+      });
+      if(displayBorders) {
+        pixelCanvasCopy.find('td').css('border', '1px solid '+ borderColor);
+      }
+      return pixelCanvasCopy;
+    }
+    
+    /**
+     * @description Creates temporary canvas needed for saving as image
+     * @param {number} width
+     * @param {number} height
+     * @return {object}
+     */
+    function createTempCanvas(width, height) {
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('id', 'canvas');
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      return canvas;
+    }    
 
     // ----- EVENTS HANDLING -----
+    // Sets cell size when window size changed
+    $(window).on('resize', function cellSizeChangeHandler() {
+      setCellSize(pixelCanvas, calculateCellDimension(colsNumber));
+    })    
+    
     // Sets brush color value on colorPicker change
     colorPicker.on('change', function colorChangeHandler() {
       brushColor = $(this).val();
@@ -182,7 +231,16 @@ $( document ).ready(function() {
 
       makeGrid(rowsNumber, colsNumber);
     });
-
+    
+    /**
+     * @description Changes color of the grid cell
+     * @param {object} event
+     */
+    function paintHandler(event) {
+      event.preventDefault();
+      $(event.target).css('background-color', brushColor);
+    }
+    
     // Starts painting
     pixelCanvas.on('mousedown', 'td', function startPaintingHandler(event) {
       event.preventDefault();
@@ -198,53 +256,33 @@ $( document ).ready(function() {
       });
     });
     
-    // Creates image to download
-    $('#create_image').on('click', function createImageFromTableHandler(event) {
+    // Saves painting as png
+    $('#save_image').on('click', function saveImageHandler(event) {
       event.preventDefault();      
       
-      // Helper variables (when using HTML inside svg there are problem with cell borders)
-      const strokeWidth = 1;
-      const correctedCellSize = cellSize - strokeWidth*3;
-      const correctedWidth = cellSize*colsNumber+strokeWidth;
-      const correctedHeight = cellSize*rowsNumber+strokeWidth;
+      // Helper variables (when using HTML inside svg there are strange problems with cell borders)
+      const strokeWidth = displayBorders ? 1 : 0;
+      const correctedCellDimensionWidth = cellDimension - strokeWidth*3;
+      const correctedCellDimensionHeight  = displayBorders ? cellDimension - strokeWidth*3 : cellDimension - 2;
+      const correctedCanvasWidth = cellDimension*colsNumber+strokeWidth;
+      const correctedCanvasHeight = cellDimension*rowsNumber+strokeWidth;
       
-      // Creates a canvas element
-      const canvas = document.createElement('canvas');
-      canvas.setAttribute("id", "canvas");
-      canvas.setAttribute("width", correctedWidth);
-      canvas.setAttribute("height", correctedHeight);     
+      const canvas = createTempCanvas(correctedCanvasWidth, correctedCanvasHeight);    
+      const pixelCanvasCopy = createPixelCanvasCopy(correctedCellDimensionWidth, correctedCellDimensionHeight);
+      const svgData = prepareSvgData(pixelCanvasCopy.prop('outerHTML'), correctedCanvasWidth, correctedCanvasHeight);
+      const canvasContext = canvas.getContext('2d');     
+      const saveLink = document.getElementById('save');
       
-      // Copy pixelCanvas element
-      const pixelCanvasCopy =  pixelCanvas.clone(true);
-      pixelCanvasCopy.css('border-collapse','collapse');
-      pixelCanvasCopy.find('td').css({
-        'width': correctedCellSize,
-        'height': correctedCellSize
-      });
-      if(displayBorders) {
-        pixelCanvasCopy.find('td').css('border', '1px solid '+ borderColor);
-      }  
-      
-      //creates an saves image
-      const ctx = canvas.getContext('2d');
-      console.log(pixelCanvasCopy.prop('outerHTML'));
-      const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ correctedWidth +'" height="'+ correctedHeight +'">' +
-           '<foreignObject width="100%" height="100%">' +
-           '<div xmlns="http://www.w3.org/1999/xhtml">' +
-           pixelCanvasCopy.prop('outerHTML') +
-           '</div>' +
-           '</foreignObject>' +
-           '</svg>';
       const img = new Image();
-      const saveCanvas = document.getElementById('save');
       img.onload = function() {        
-        ctx.drawImage(img, 0, 0);
-        $('#save').attr('href', canvas.toDataURL('image/png'));
-        saveCanvas.click();
+        canvasContext.drawImage(img, 0, 0);
+        saveLink.setAttribute('href', canvas.toDataURL('image/png'));
+        saveLink.click();
       }; 
-      img.src = data;
-    });
+      img.src = svgData;
+    });    
     
+    // Draws initial grid
     makeGrid(rowsNumber, colsNumber);
   })();
 });
