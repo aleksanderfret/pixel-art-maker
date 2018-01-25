@@ -34,8 +34,7 @@ h1 {
 
 #tool_panel {
     position: relative;
-    display: flex;
-    lex-wrap: wrap;
+    display: flex;    
     justify-content: space-evenly;
     width: 100%;
     background: -moz-linear-gradient(top, #bbb 1%, #999 100%);
@@ -43,7 +42,7 @@ h1 {
     background: linear-gradient(to bottom, #bbb 1%,#999 100%);
 }
 
-@media screen and (max-width:850px){
+@media screen and (max-width:920px){
     #tool_panel {
         flex-direction: column;
     }
@@ -113,11 +112,10 @@ input[type="color"] {
     clear: both;
     box-sizing: border-box;
     position: relative;
-    min-height: 400px;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0 2% 2% 2%;
+    min-height: 400px;    
+    width: 96%;
+    margin: 0 auto;
+    padding-bottom: 2%;
     background-color: #efefef;
     -webkit-border-radius: 0 0 5px 5px;
     -moz-border-radius: 0 0 5px 5px;
@@ -131,8 +129,11 @@ input[type="color"] {
 
 table,
 tr,
-td {
+td {    
     border: none;
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
 }
 
 #pixel_canvas {

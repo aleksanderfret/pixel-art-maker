@@ -33,7 +33,7 @@ $( document ).ready(function() {
      */
     function calculateCellDimension(colNumber) {
       const boardWidth = $('#board').width();
-      const cellWidthCalculated = Math.round(boardWidth/colNumber);
+      const cellWidthCalculated = Math.floor(boardWidth/colNumber);
       cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
       return cellDimension;      
     }
@@ -44,8 +44,12 @@ $( document ).ready(function() {
      * @param {number} cellDimension
      */
     function setCellSize(cellContainer, cellDimension) {
+      
       cellContainer.find('td').css({        
         'width': cellDimension,
+        'height': cellDimension
+      });
+     cellContainer.find('tr').css({
         'height': cellDimension
       });
     }
