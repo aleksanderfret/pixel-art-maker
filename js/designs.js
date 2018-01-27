@@ -8,6 +8,8 @@ $( document ).ready(function() {
     const borderColorPicker = $('#border_color_picker');
     const pixelCanvasInputHeight = $('#input_height');
     const pixelCanvasInputWidth = $('#input_width');
+    const undo = $('#undo');
+    const redo = $('#redo');
 
     // Captures initial values from DOM elements
     const initialBrushColor = colorPicker.val();
@@ -25,7 +27,88 @@ $( document ).ready(function() {
     let backgroundColor = initialBackgroundColor;
     let borderColor = initialBorderColor;
     let displayBorders = true;
-    
+
+    // Variables to redo and undo features
+    const numberOfUndos = 20;
+    const modyfiedCells = [];
+    const actionsUndoHistory = [];
+    const actionsRedoHistory = [];
+    let redoEnabled = false;
+    let undoEnabled = false;
+
+    /**
+     * @description Sets redoEnabled variable and toogles disable attribiute on redo button
+     * @param {boolean} value
+     */
+    function setRedo(value) {
+      redoEnabled = value;
+      if (redoEnabled) {
+        redo.prop('disabled', false);
+      } else {
+        redo.prop('disabled', true);
+      }
+    }
+
+    /**
+     * @description Sets undoEnabled variable and toogles disable attribiute on undo button
+     * @param {boolean} value
+     */
+    function setUndo(value) {
+      undoEnabled = value;
+      if (undoEnabled) {
+        undo.prop('disabled', false);
+      } else {
+        undo.prop('disabled', true);
+      }
+    }
+
+    /**
+     * @description Saves classes and background color of modyfied cells
+     */
+    function registerModyfyingCells(event) {
+      const currentCell = $(event.target);
+      const currentCellClass = currentCell.attr('class');
+      const currentBackgroundColor = currentCell.css('background-color');
+      const backgroundToRegister = (rgb2hex(currentBackgroundColor) === backgroundColor) ? null : currentBackgroundColor;
+      let registerCell = true;
+
+      if (modyfiedCells.length > 0) {
+        modyfiedCells.find(function findIfCellIsRegistered(element) {
+          if (element.class === currentCellClass) {
+            registerCell = false;
+          }
+        });
+      }
+
+      if (registerCell) {
+        const cellData = {
+          class: currentCell.attr('class'),
+          oldBackground: backgroundToRegister
+        };
+        modyfiedCells.push(cellData);
+      }
+    }
+
+    /**
+     * @description Saves as an abject modyfied cells and curret brush color
+     */
+    function registerAction() {
+      const action = {
+        changedCells: modyfiedCells.slice(0),
+        newBackgroundColor: brushColor
+      };
+
+      if(actionsUndoHistory.length < numberOfUndos) {
+        actionsUndoHistory.push(action);
+      } else {
+        actionsUndoHistory.shift();
+        actionsUndoHistory.push(action);
+      }
+
+      modyfiedCells.length = 0
+      setUndo(true);
+    }
+
     /**
      * @description Calculates cell dimension to fit square grid to screen
      * @param {number} colNumber - number of columns
@@ -35,17 +118,17 @@ $( document ).ready(function() {
       const boardWidth = $('#board').width();
       const cellWidthCalculated = Math.floor(boardWidth/colNumber);
       cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
-      return cellDimension;      
+      return cellDimension;
     }
-    
+
     /**
      * @description Sets size of pixel-art's square cells
      * @param {object} cellContainer
      * @param {number} cellDimension
      */
     function setCellSize(cellContainer, cellDimension) {
-      
-      cellContainer.find('td').css({        
+
+      cellContainer.find('td').css({
         'width': cellDimension,
         'height': cellDimension
       });
@@ -53,7 +136,7 @@ $( document ).ready(function() {
         'height': cellDimension
       });
     }
-    
+
     /**
      * @description Draws grid
      * @param {number} height - number of rows
@@ -61,22 +144,25 @@ $( document ).ready(function() {
      */
     function makeGrid(height, width) {
       let grid = '';
-
+      let cellClass = '';
       for (let row = 1; row <= height; row++) {
         grid += '<tr>';
+        cellClass = 'y'+row;
         for (let col = 1; col <= width; col++) {
-          grid += '<td></td>';
+          cellClass = cellClass + ' x'+col;
+          grid += '<td class="'+cellClass+'"></td>';
+          cellClass = 'y'+row;
         }
         grid += '</tr>';
-      }      
-      pixelCanvas.html(grid);       
+      }
+      pixelCanvas.html(grid);
       pixelCanvas.find('td').addClass('bordered_cells').css({
         'border-color': borderColor,
         'background-color': backgroundColor
-      });      
+      });
       setCellSize(pixelCanvas, calculateCellDimension(width));
     }
-    
+
     /**
      * @description Converts rgb color to hex color
      * @param {string} rgb - rgb color
@@ -102,7 +188,7 @@ $( document ).ready(function() {
         }
       });
     }
-        
+
     /**
      * @description Prepares svg data with canvas (needed for saving as image)
      * @param {string} canvasHTML
@@ -120,7 +206,7 @@ $( document ).ready(function() {
            '</svg>';
       return data;
     }
-    
+
     /**
      * @description Creates pixelCanvas copy with inline styles
      * @param {number} cellWidth
@@ -139,7 +225,7 @@ $( document ).ready(function() {
       }
       return pixelCanvasCopy;
     }
-    
+
     /**
      * @description Creates temporary canvas needed for saving as image
      * @param {number} width
@@ -152,14 +238,14 @@ $( document ).ready(function() {
       canvas.setAttribute('width', width);
       canvas.setAttribute('height', height);
       return canvas;
-    }    
+    }
 
     // ----- EVENTS HANDLING -----
     // Sets cell size when window size changed
     $(window).on('resize', function cellSizeChangeHandler() {
       setCellSize(pixelCanvas, calculateCellDimension(colsNumber));
-    })    
-    
+    })
+
     // Sets brush color value on colorPicker change
     colorPicker.on('change', function colorChangeHandler() {
       brushColor = $(this).val();
@@ -229,25 +315,29 @@ $( document ).ready(function() {
 
     // Creates the grid based on entered values, when grid size is submitted
     $('.submit').on('click', function setDimensionsHandler(event) {
-      event.preventDefault();     
+      event.preventDefault();
       colsNumber = pixelCanvasInputWidth.val();
       rowsNumber = pixelCanvasInputHeight.val();
 
       makeGrid(rowsNumber, colsNumber);
     });
-    
+
     /**
      * @description Changes color of the grid cell
      * @param {object} event
      */
     function paintHandler(event) {
       event.preventDefault();
+      registerModyfyingCells(event);
       $(event.target).css('background-color', brushColor);
     }
-    
+
     // Starts painting
     pixelCanvas.on('mousedown', 'td', function startPaintingHandler(event) {
       event.preventDefault();
+
+      actionsRedoHistory.length = 0;
+      setRedo(false);
 
       // Paints current cell and additionally starts handling painting on mouseover event
       paintHandler(event);
@@ -257,35 +347,72 @@ $( document ).ready(function() {
       $('body').one('mouseup', function stopPaintingHandler(event) {
         event.preventDefault();
         pixelCanvas.off('mouseover', 'td', paintHandler);
+        registerAction();
       });
     });
-    
+
+    // Undo last painting action
+    undo.on('click', function undoLastActionHandler() {
+      const lastAction = actionsUndoHistory.pop();
+      for (let i = 0; i < lastAction.changedCells.length; i++) {
+        const tdClass = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
+        const cell = pixelCanvas.find(tdClass);
+        const registerBackgroundColor = lastAction.changedCells[i].oldBackground;
+        const newBackgroundColor = (registerBackgroundColor === null) ? backgroundColor : registerBackgroundColor;
+        cell.css({
+          'background-color': newBackgroundColor
+        });
+      }
+      actionsRedoHistory.push(lastAction);
+      setRedo(true);
+      if (actionsUndoHistory.length == 0) {
+        setUndo(false);
+      }
+    });
+
+    // Redo last undo actions
+    redo.on('click', function redoLastAction() {
+      const lastAction = actionsRedoHistory.pop();
+      for (let i = 0; i < lastAction.changedCells.length; i++) {
+        const tdClass = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
+        const cell = pixelCanvas.find(tdClass);
+        cell.css({
+          'background-color': lastAction.newBackgroundColor
+        });
+      }
+      actionsUndoHistory.push(lastAction);
+      if (actionsRedoHistory.length == 0) {
+        setRedo(false);
+      }
+      setUndo(true);
+    });
+
     // Saves painting as png
     $('#save_image').on('click', function saveImageHandler(event) {
-      event.preventDefault();      
-      
+      event.preventDefault();
+
       // Helper variables (when using HTML inside svg there are strange problems with cell borders)
       const strokeWidth = displayBorders ? 1 : 0;
       const correctedCellDimensionWidth = cellDimension - strokeWidth*3;
       const correctedCellDimensionHeight  = displayBorders ? cellDimension - strokeWidth*3 : cellDimension - 2;
       const correctedCanvasWidth = cellDimension*colsNumber+strokeWidth;
       const correctedCanvasHeight = cellDimension*rowsNumber+strokeWidth;
-      
-      const canvas = createTempCanvas(correctedCanvasWidth, correctedCanvasHeight);    
+
+      const canvas = createTempCanvas(correctedCanvasWidth, correctedCanvasHeight);
       const pixelCanvasCopy = createPixelCanvasCopy(correctedCellDimensionWidth, correctedCellDimensionHeight);
       const svgData = prepareSvgData(pixelCanvasCopy.prop('outerHTML'), correctedCanvasWidth, correctedCanvasHeight);
-      const canvasContext = canvas.getContext('2d');     
+      const canvasContext = canvas.getContext('2d');
       const saveLink = document.getElementById('save');
-      
+
       const img = new Image();
-      img.onload = function() {        
+      img.onload = function() {
         canvasContext.drawImage(img, 0, 0);
         saveLink.setAttribute('href', canvas.toDataURL('image/png'));
         saveLink.click();
-      }; 
+      };
       img.src = svgData;
-    });    
-    
+    });
+
     // Draws initial grid
     makeGrid(rowsNumber, colsNumber);
   })();

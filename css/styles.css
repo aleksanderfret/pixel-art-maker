@@ -34,7 +34,7 @@ h1 {
 
 #tool_panel {
     position: relative;
-    display: flex;    
+    display: flex;
     justify-content: space-evenly;
     width: 100%;
     background: -moz-linear-gradient(top, #bbb 1%, #999 100%);
@@ -112,7 +112,7 @@ input[type="color"] {
     clear: both;
     box-sizing: border-box;
     position: relative;
-    min-height: 400px;    
+    min-height: 400px;
     width: 96%;
     margin: 0 auto;
     padding-bottom: 2%;
@@ -129,7 +129,7 @@ input[type="color"] {
 
 table,
 tr,
-td {    
+td {
     border: none;
     padding: 0px;
     margin: 0px;
@@ -141,12 +141,13 @@ td {
     margin: 0 auto 0 auto;
     background-color: #fff;
     -webkit-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
+    border: 2px solid black;
     -moz-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
     box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
 }
 
 .bordered_cells {
-    border: 1px solid black;
+    border: 1px solid #d3d3d3;
 }
 
 table {
