@@ -41,11 +41,9 @@ $( document ).ready(function() {
      * @param {boolean} value
      */
     function setRedo(value) {
-      redoEnabled = value;
-      if (redoEnabled) {
-        redo.prop('disabled', false);
-      } else {
-        redo.prop('disabled', true);
+      if (value !== redoEnabled) {
+        redoEnabled = value;
+        redo.prop('disabled', !redoEnabled);
       }
     }
 
@@ -54,12 +52,27 @@ $( document ).ready(function() {
      * @param {boolean} value
      */
     function setUndo(value) {
-      undoEnabled = value;
-      if (undoEnabled) {
-        undo.prop('disabled', false);
-      } else {
-        undo.prop('disabled', true);
+      if (value !== undoEnabled) {
+        undoEnabled = value;
+        undo.prop('disabled', !undoEnabled);
       }
+    }
+
+    /**
+     * @description Checks if cell was registered in this actions
+     * @param {boolean} cellClasses
+     * @return {boolean}
+     */
+    function isNotRegistered(cellClasses) {
+      let registerCell = true;
+      if (modyfiedCells.length > 0) {
+        modyfiedCells.find(function findIfCellIsRegistered(element) {
+          if (element.class === cellClasses) {
+            registerCell = false;
+          }
+        });
+      }
+      return registerCell
     }
 
     /**
@@ -70,17 +83,8 @@ $( document ).ready(function() {
       const currentCellClass = currentCell.attr('class');
       const currentBackgroundColor = currentCell.css('background-color');
       const backgroundToRegister = (rgb2hex(currentBackgroundColor) === backgroundColor) ? null : currentBackgroundColor;
-      let registerCell = true;
 
-      if (modyfiedCells.length > 0) {
-        modyfiedCells.find(function findIfCellIsRegistered(element) {
-          if (element.class === currentCellClass) {
-            registerCell = false;
-          }
-        });
-      }
-
-      if (registerCell) {
+      if (isNotRegistered(currentCellClass)) {
         const cellData = {
           class: currentCell.attr('class'),
           oldBackground: backgroundToRegister
@@ -90,7 +94,7 @@ $( document ).ready(function() {
     }
 
     /**
-     * @description Saves as an abject modyfied cells and curret brush color
+     * @description Saves as an object modyfied cells and curret brush color
      */
     function registerAction() {
       const action = {
@@ -98,12 +102,10 @@ $( document ).ready(function() {
         newBackgroundColor: brushColor
       };
 
-      if(actionsUndoHistory.length < numberOfUndos) {
-        actionsUndoHistory.push(action);
-      } else {
+      if(actionsUndoHistory.length >= numberOfUndos) {
         actionsUndoHistory.shift();
-        actionsUndoHistory.push(action);
       }
+      actionsUndoHistory.push(action);
 
       modyfiedCells.length = 0
       setUndo(true);
@@ -355,10 +357,11 @@ $( document ).ready(function() {
     undo.on('click', function undoLastActionHandler() {
       const lastAction = actionsUndoHistory.pop();
       for (let i = 0; i < lastAction.changedCells.length; i++) {
-        const tdClass = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
-        const cell = pixelCanvas.find(tdClass);
+        const tdSelector = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
+        const cell = pixelCanvas.find(tdSelector);
         const registerBackgroundColor = lastAction.changedCells[i].oldBackground;
-        const newBackgroundColor = (registerBackgroundColor === null) ? backgroundColor : registerBackgroundColor;
+        const newBackgroundColor = registerBackgroundColor || backgroundColor;
+
         cell.css({
           'background-color': newBackgroundColor
         });
@@ -371,20 +374,20 @@ $( document ).ready(function() {
     });
 
     // Redo last undo actions
-    redo.on('click', function redoLastAction() {
+    redo.on('click', function redoLastActionHandler() {
       const lastAction = actionsRedoHistory.pop();
       for (let i = 0; i < lastAction.changedCells.length; i++) {
-        const tdClass = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
-        const cell = pixelCanvas.find(tdClass);
+        const tdSelector = 'td.' + lastAction.changedCells[i].class.replace(/\s/g, '.');
+        const cell = pixelCanvas.find(tdSelector);
         cell.css({
           'background-color': lastAction.newBackgroundColor
         });
       }
       actionsUndoHistory.push(lastAction);
+      setUndo(true);
       if (actionsRedoHistory.length == 0) {
         setRedo(false);
       }
-      setUndo(true);
     });
 
     // Saves painting as png
