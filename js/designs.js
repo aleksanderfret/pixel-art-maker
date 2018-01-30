@@ -36,6 +36,9 @@ $( document ).ready(function() {
     let redoEnabled = false;
     let undoEnabled = false;
 
+    let currentTool = '';
+    let previousColor;
+
     /**
      * @description Sets redoEnabled variable and toogles disable attribiute on redo button
      * @param {boolean} value
@@ -254,9 +257,10 @@ $( document ).ready(function() {
     });
 
     // Hides or shows cell borders
-    $('#border_switcher').on('click', function cellBorderSwitchHandler() {
+    $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
       pixelCanvas.find('td').toggleClass('bordered_cells');
-      $(this).attr('value', (displayBorders) ? 'Show' : 'Hide');
+      $(this).attr('title', (displayBorders) ? 'Show borders.' : 'Hide borders.');
+      $(this).find('img').attr('src', (displayBorders) ? 'img/borders_on.png' : 'img/borders_off.png');
       displayBorders = !displayBorders;
     });
 
@@ -266,10 +270,10 @@ $( document ).ready(function() {
       pixelCanvas.find('td').css('border-color', borderColor);
     });
 
-    // Changes cell background color on backgroundColorPicker change
-    backgroundColorPicker.on('change', function backgroundColorChangeHandler() {
-      cellBackgroundChanger(backgroundColor, $(this).val());
-      backgroundColor = $(this).val();
+    // Changes cell background color on fill button click
+    $('#fill').on('click', function canvasBbackgroundColorChangeHandler() {
+      cellBackgroundChanger(backgroundColor, backgroundColorPicker.val());
+      backgroundColor = backgroundColorPicker.val();
     });
 
     // Clean background color on button click
@@ -279,8 +283,8 @@ $( document ).ready(function() {
       backgroundColorPicker[0].value = backgroundColor;
     });
 
-    // Clears paintig
-    $('#brush_cleaner').on('click', function cellBrushCleanHandler() {
+    // Clears painting
+    $('#clear_painting').on('click', function cellBrushCleanHandler() {
       pixelCanvas.find('td').css('background-color', backgroundColor);
     });
 
@@ -295,7 +299,7 @@ $( document ).ready(function() {
       backgroundColorPicker[0].value = backgroundColor;
       borderColorPicker[0].value = borderColor;
       pixelCanvas.find('td').addClass('bordered_cells');
-      $('#border_switcher').attr('value', 'Hide');
+      $('#borders_switcher').attr('value', 'Hide');
       pixelCanvas.find('td').css({
         'background-color': backgroundColor,
         'border-color': borderColor
@@ -316,13 +320,88 @@ $( document ).ready(function() {
     });
 
     // Creates the grid based on entered values, when grid size is submitted
-    $('.submit').on('click', function setDimensionsHandler(event) {
+    $('#draw_grid').on('click', function setDimensionsHandler(event) {
       event.preventDefault();
       colsNumber = pixelCanvasInputWidth.val();
       rowsNumber = pixelCanvasInputHeight.val();
 
       makeGrid(rowsNumber, colsNumber);
     });
+
+
+
+
+
+
+
+
+
+
+    $('#erase, #brush, #eyedropper').on('click', function onToolClickHandler(event) {
+      // Resets current tool
+      // TODO icon styles reset
+      // TODO reset current tool function
+      // pixelCanvas.find('td').off( "mouseenter mouseleave" );
+
+      // Runs proper tool
+      currentTool = $(event.currentTarget).attr('id');
+      switch (currentTool) {
+        case 'erase':
+          runEraseTool();
+          break;
+        case 'eyedropper':
+          runEyedropperTool();
+          break;
+        case 'brush':
+          runBrushTool();
+          break;
+        default:
+          null;
+      }
+    });
+
+    function runEraseTool() {
+      pixelCanvas.find('td').hover(function toggleOpacityHandler(event){
+        const currentColor = rgb2hex($(event.target).css('background-color'));
+        if (currentColor !== backgroundColor) {
+          const opacity = (event.type === 'mouseenter') ? 0.5 : 1;
+          $(this).css({
+            'opacity': opacity
+          });
+        }
+      });
+      pixelCanvas.find('td').on('cellColorChanged', function resetOpacityHandler(event){
+        $(this).css({
+          'opacity': 1
+        });
+      });
+    }
+
+    function runBrushTool() {
+      pixelCanvas.find('td').hover(function(event) {
+        previousColor = $(this).css('background-color');
+        //TODO
+        // if(event.type === 'mouseenter') {
+        //   previousColor = $(this).css('background-color');
+        // }
+        // const color = (event.type === 'mouseenter') ? brushColor : previousColor;
+        // $(this).css({
+        //   'background-color': brushColor
+        // });
+      });
+    }
+    function runEyedropperTool() {
+      //TODO
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * @description Changes color of the grid cell
@@ -331,7 +410,9 @@ $( document ).ready(function() {
     function paintHandler(event) {
       event.preventDefault();
       registerModyfyingCells(event);
-      $(event.target).css('background-color', brushColor);
+      const newColor = (currentTool === 'erase') ? backgroundColor : brushColor;
+      $(event.target).css('background-color', newColor);
+      $(event.target).trigger('cellColorChanged');
     }
 
     // Starts painting

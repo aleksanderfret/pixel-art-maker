@@ -5,121 +5,143 @@ body {
     text-align: center;
     font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;
     background-color: #333;
+    margin: 0px;
+    padding: 0px;
 }
 
 #painter {
-    position: relative;
-    background-color: #efefef;
-    max-width: 1200px;
+    position: absolute;
+    width: 100%;
     min-width: 350px;
-    margin: 3% auto 3% auto;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 0px 5px 0 rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
-    box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    bottom: 0px;
+    background-color: #e2e2e2;
 }
 
 h1 {
     position: relative;
-    font: 3em Monoton;
+    font-size: 1.2em;
+    font-weight: 300;
+    padding: 4px;
+    z-index: 1;
     margin: 0;
-    color: #444;
-    background-color: #bbb;
-    -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    border-radius: 5px 5px 0 0;
+    color: white;
+    background-color: rgb(180, 180, 180);
+    text-align: left;
 }
 
-#tool_panel {
+#toolbars_panel {
     position: relative;
-    display: flex;
-    justify-content: space-evenly;
+    z-index: 1;
     width: 100%;
-    background: -moz-linear-gradient(top, #bbb 1%, #999 100%);
-    background: -webkit-linear-gradient(top, #bbb 1%,#999 100%);
-    background: linear-gradient(to bottom, #bbb 1%,#999 100%);
+    height: 50px;
+    background-color: rgb(180, 180, 180);
+    text-align: left;
 }
 
-@media screen and (max-width:920px){
-    #tool_panel {
-        flex-direction: column;
-    }
-    .tool_options {
-        display: inline-block;
-    }
+form {
+  padding: 0px;
+  margin: 0px;
+  display: block;
+  height: 40px;
 }
 
-.tool {
-    display: block;
-    float: left;
-    font-size: 0.9em;
-    padding: 0 0.8em;
+.toolbar {
+  display: inline-block;
+  box-sizing: border-box;
+  font-size: 0.9em;
+  height: 40px;
+  padding: 5px 0px;
+  border-right: 1px solid rgb(160, 160, 160);
 }
 
-.tool h2 {
-    box-sizing: border-box;
-    margin: 0;
-    height: 25px;
-    font-size: 1.3em;
+.tools {
+  display: inline-block;
+  height:  40px;
+  margin: 0px 3px;
 }
-
-.tool_options {
-    height: 35px;
-    box-sizing: border-box;
-    padding: 0;
-}
-
-input,
-label {
-    display: block;
-    float: left;
-    font: 1.1em 'Ubuntu Condensed';
-    box-sizing: border-box;
-    margin: 0;
-    height: 20px;
-    border: none;
-    margin: 0 0.2em 0 0.2em;
-}
-
-input[type="number"],
-input[type="color"] {
-    width: 40px;
-}
-
 .tool_button {
-    background: -moz-linear-gradient(top, #ccc 1%,#888 100%);
-    background: -webkit-linear-gradient(top, #ccc 1%,#888 100%);
-    background: linear-gradient(to bottom, #ccc 1%,#888 100%);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    box-shadow: 0 0 5px 0 rgba(255,255,255,0.75);
+  padding: 0px;
+  border: none;
+  background: none;
+  color: white;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
 }
-.tool_button:hover {
-    background: -moz-linear-gradient(top, #ddd 1%, #999 100%);
-    background: -webkit-linear-gradient(top, #ddd 1%, #999 100%);
-    background: linear-gradient(to bottom, #ddd 1%, #999 100%);
+
+.tool_button img {
+  display: inline-block;
+  margin: 5px;
+  width: 30px;
+  height: 30px;
 }
-.tool_button:active {
-    background: -moz-linear-gradient(top, #888 1%,#ccc 100%);
-    background: -webkit-linear-gradient(top, #888 1%,#ccc 100%);
-    background: linear-gradient(to bottom, #888 1%,#ccc 100%);
+
+input {
+  display: block;
+  float: left;
+  font: 1.1em 'Ubuntu Condensed';
+  box-sizing: border-box;
+  margin: 5px 3px;
+  padding: 0px;
+  border: none;
+  height: 30px;
+  width: 30px;
+}
+
+.tool_button:enabled:hover {
+  background-color: rgb(150, 150, 150);
+  transition: 0.2s;
+  box-shadow: inset 0px 0px 5px 0px rgba(40, 40, 40, 0.75);
+  border-radius: 5px;
+}
+
+.tool_button:hover img,
+.tool_button:hover input {
+  margin: 7px;
+  width: 26px;
+  height: 26px;
+  transition: 0.2s;
+}
+
+.tool_button:disabled img {
+  opacity: 0.5;
+  margin: 5px;
+  width: 30px;
+  height: 30px;
+  }
+
+input[type="color"] {
+  width: 30px;
+  height: 30px;
+  margin:5px;
+  background-color: none;
+  background: none;
+  background: transparent;
+}
+
+input[type="color"]:hover {
+  margin: 7px;
+  width: 26px;
+  height: 26px;
+  transition: 0.2s;
 }
 
 #board {
     clear: both;
     box-sizing: border-box;
     position: relative;
-    min-height: 400px;
-    width: 96%;
-    margin: 0 auto;
-    padding-bottom: 2%;
+    top: -140px;
+    z-index: 0;
+    padding: 160px 0 50px 0;
+    min-height: 100%;
+    width: 100%;
     background-color: #efefef;
-    -webkit-border-radius: 0 0 5px 5px;
-    -moz-border-radius: 0 0 5px 5px;
-    border-radius: 0 0 5px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #board h2 {
@@ -135,10 +157,11 @@ td {
     margin: 0px;
     box-sizing: border-box;
 }
+td:hover {
+  box-shadow: inset 0px 0px 5px 0 rgba(90,90,90,0.75);
+}
 
 #pixel_canvas {
-    position: relative;
-    margin: 0 auto 0 auto;
     background-color: #fff;
     -webkit-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
     border: 2px solid black;
