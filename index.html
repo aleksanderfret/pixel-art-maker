@@ -6,68 +6,132 @@
 </head>
 <body>
 <div id="painter">
-    <h1>Lab: Pixel Art Maker</h1>
-    <div id="tool_panel">
-        <div class="tool">
-            <h2>Grid</h2>
-            <div class="tool_options">
-                <form id="size_picker">
-                    <label for="input_height">Height:</label>
-                    <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100.">
-                    <label for="input_width">Width:</label>
-                    <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100.">
-                    <input type="submit" class="submit tool_button" value="Draw" title="Draw grid.">
-                </form>
-            </div>
+    <h1>Pixel Art Maker</h1>
+    <div id="toolbars_panel">
+      <div class="toolbar">
+        <div class="tools">
+          <button
+            class="tool_button"
+            type="button"
+            name="new_canvas"
+            id="new_canvas"
+            title="New canvas."
+            ><img src="img/new.png" alt="New canvas."></button>
         </div>
-        <div class="tool">
-            <h2>Background</h2>
-            <div class="tool_options">
-                <label for="background_color_picker">Color:</label>
-                <input type="color" id="background_color_picker" value="#ffffff" title="Set background color.">
-                <input type="button" id="background_cleaner" value="Clear" class="tool_button" title="Clear background.">
-            </div>
+        <div class="tools">
+          <button
+            class="tool_button"
+            type="button"
+            name="print"
+            id="print"
+            title="Print painting."
+            ><img src="img/print.png" alt="Print."></button>
         </div>
-        <div class="tool">
-            <h2>Borders</h2>
-            <div class="tool_options">
-                <label for="border_color_picker">Color:</label>
-                <input type="color" id="border_color_picker" title="Set borders color." value="#d3d3d3">
-                <input type="button" name="borders" value="Hide" id="border_switcher" class="tool_button" title="Show or hide cell borders.">
-            </div>
+        <div class="tools">
+          <button
+            class="tool_button"
+            type="button"
+            name="save"
+            id="save_image"
+            title="Save painting as image."><img src="img/save.png" alt="Save"></button>
         </div>
-        <div class="tool">
-            <h2>Brush</h2>
-            <div class="tool_options">
-                <label for="color_picker">Color:</label>
-                <input type="color" id="color_picker" title="Set brush color.">
-                <input type="button" name="clean" value="Clear" id="brush_cleaner" class="tool_button" title="Clear painting.">
-            </div>
-        </div>
-        <div class="tool">
-            <h2>Canvas</h2>
-            <div class="tool_options">
-                <input type="button" name="clear" id="clear_canvas" value="Clear" class="tool_button" title="Clear painting and reset: borders, background, brush.">
-            </div>
-        </div>
-        <div class="tool">
-          <h2>Action</h2>
-          <div class="tool_options">
-              <input type="button" name="undo" id="undo" value="Undo" class="tool_button" title="Undo last action." disabled="true">
-              <input type="button" name="redo" id="redo" value="Redo" class="tool_button" title="Redo last action." disabled="true">
-          </div>
       </div>
-        <div class="tool">
-            <h2>Image</h2>
-            <div class="tool_options">
-              <input type="button" name="save" id="save_image" value="Save" class="tool_button" title="Save painting as image.">
-            </div>
+      <div class="toolbar">
+        <div class="tools">
+          <button
+            class="tool_button"
+            type="button"
+            name="undo"
+            id="undo"
+            title="Undo last action."
+            disabled><img src="img/undo.png" alt="Undo"></button>
+          <button
+            class="tool_button"
+            type="button"
+            name="redo"
+            id="redo"
+            title="Redo last action."
+            disabled><img src="img/redo.png" alt="Redo"></button>
         </div>
+      </div>
+      <div class="toolbar">
+        <div class="tools">
+          <form id="size_picker">
+            <!-- <label for="input_height">Height:</label> -->
+            <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100.">
+            <!-- <label for="input_width">Width:</label> -->
+            <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100.">
+            <button
+              class="tool_button"
+              type="submit"
+              name="draw_grid"
+              id="draw_grid"
+              title="Draw grid."><img src="img/grid.png" alt="Draw"></button>
+          </form>
+        </div>
+        <div class="tools">
+          <input type="color" id="border_color_picker" title="Set borders color." value="#d3d3d3">
+          <button
+            class="tool_button"
+            type="button"
+            name="borders"
+            id="borders_switcher"
+            title="Hide borders."><img src="img/borders_off.png" alt="Hide borders"></button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="tools">
+          <div class="tool_button">
+            <input type="color" id="background_color_picker" value="#ffffff" title="Set background color.">
+          </div>
+          <button
+            class="tool_button"
+            type="button"
+            name="fill"
+            id="fill"
+            title="Color the background."><img src="img/fill.png" alt="Color the background."></button>
+          <button
+            class="tool_button"
+            type="button"
+            name="background_cleaner"
+            id="background_cleaner"
+            title="Clear the background."><img src="img/unfill.png" alt="Clear the background."></button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="tools">
+          <input type="color" id="color_picker" title="Set brush color.">
+          <button
+            class="tool_button"
+            type="button"
+            name="brush"
+            id="brush"
+            title="Brush."><img src="img/brush.png" alt="Brush"></button>
+          <button
+            class="tool_button"
+            type="button"
+            name="clear_painting"
+            id="clear_painting"
+            title="Clear painting."><img src="img/unbrush.png"  alt="Clear painting"></button>
+          <button
+            class="tool_button"
+            type="button"
+            name="erase"
+            id="erase"
+            title="Erase brush."><img src="img/erase.png"  alt="Erase"></button>
+          <button
+            class="tool_button"
+            type="button"
+            name="eyedropper"
+            id="eyedropper"
+            title="Choose colors with the eyedropper."><img src="img/eyedropper.png"  alt="Eyedropper"></button>
+        </div>
+      </div>
     </div>
     <div id="board">
-        <h2>Design Canvas</h2>
-          <table id="pixel_canvas"></table>
+      <table id="pixel_canvas"></table>
     </div>
+    <div id="forPrint"></div>
 </div>
 <a href="#" id="save" class="tool_button" download="pixel-art_maker.png">Download</a>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -5,121 +5,158 @@ body {
     text-align: center;
     font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;
     background-color: #333;
+    margin: 0px;
+    padding: 0px;
+    background-color: #efefef;
 }
 
 #painter {
-    position: relative;
-    background-color: #efefef;
-    max-width: 1200px;
+    position: absolute;
+    width: 100%;
     min-width: 350px;
-    margin: 3% auto 3% auto;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 0px 5px 0 rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
-    box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    bottom: 0px;
+    background-color: #efefef;
 }
 
 h1 {
     position: relative;
-    font: 3em Monoton;
-    margin: 0;
-    color: #444;
-    background-color: #bbb;
-    -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    border-radius: 5px 5px 0 0;
-}
-
-#tool_panel {
-    position: relative;
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    background: -moz-linear-gradient(top, #bbb 1%, #999 100%);
-    background: -webkit-linear-gradient(top, #bbb 1%,#999 100%);
-    background: linear-gradient(to bottom, #bbb 1%,#999 100%);
-}
-
-@media screen and (max-width:920px){
-    #tool_panel {
-        flex-direction: column;
-    }
-    .tool_options {
-        display: inline-block;
-    }
-}
-
-.tool {
-    display: block;
-    float: left;
-    font-size: 0.9em;
-    padding: 0 0.8em;
-}
-
-.tool h2 {
-    box-sizing: border-box;
-    margin: 0;
-    height: 25px;
-    font-size: 1.3em;
-}
-
-.tool_options {
-    height: 35px;
-    box-sizing: border-box;
-    padding: 0;
-}
-
-input,
-label {
-    display: block;
-    float: left;
-    font: 1.1em 'Ubuntu Condensed';
-    box-sizing: border-box;
-    margin: 0;
+    font-size: 1.2em;
+    font-weight: 300;
+    padding: 4px;
     height: 20px;
-    border: none;
-    margin: 0 0.2em 0 0.2em;
+    z-index: 1;
+    margin: 0;
+    color: white;
+    background-color: rgb(180, 180, 180);
+    text-align: left;
 }
 
-input[type="number"],
-input[type="color"] {
-    width: 40px;
+#toolbars_panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 50px;
+    background-color: rgb(180, 180, 180);
+    text-align: left;
 }
 
+@media screen and (max-width:830px){
+  #toolbars_panel {
+    height: auto;
+    text-align: center;
+  }
+}
+
+form {
+  padding: 0px;
+  margin: 0px;
+  display: block;
+  height: 40px;
+}
+
+.toolbar {
+  display: inline-block;
+  box-sizing: border-box;
+  font-size: 0.9em;
+  height: 40px;
+  margin: 5px 0px;
+  border-right: 1px solid rgb(160, 160, 160);
+}
+
+.tools {
+  display: inline-block;
+  height:  40px;
+  margin: 0px 3px;
+}
 .tool_button {
-    background: -moz-linear-gradient(top, #ccc 1%,#888 100%);
-    background: -webkit-linear-gradient(top, #ccc 1%,#888 100%);
-    background: linear-gradient(to bottom, #ccc 1%,#888 100%);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    box-shadow: 0 0 5px 0 rgba(255,255,255,0.75);
+  padding: 0px;
+  border: none;
+  background: none;
+  color: white;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
 }
-.tool_button:hover {
-    background: -moz-linear-gradient(top, #ddd 1%, #999 100%);
-    background: -webkit-linear-gradient(top, #ddd 1%, #999 100%);
-    background: linear-gradient(to bottom, #ddd 1%, #999 100%);
+
+.tool_button img {
+  display: inline-block;
+  margin: 5px;
+  width: 30px;
+  height: 30px;
 }
-.tool_button:active {
-    background: -moz-linear-gradient(top, #888 1%,#ccc 100%);
-    background: -webkit-linear-gradient(top, #888 1%,#ccc 100%);
-    background: linear-gradient(to bottom, #888 1%,#ccc 100%);
+
+input {
+  display: block;
+  float: left;
+  font: 1.1em 'Ubuntu Condensed';
+  box-sizing: border-box;
+  margin: 5px 3px;
+  padding: 0px;
+  border: none;
+  height: 30px;
+  width: 30px;
+}
+
+.tool_button:enabled:hover,
+.active_tool {
+  background-color: rgb(150, 150, 150);
+  transition: 0.2s;
+  box-shadow: inset 0px 0px 5px 0px rgba(40, 40, 40, 0.75);
+  border-radius: 5px;
+}
+
+.tool_button:hover img,
+.tool_button:hover input,
+.active_tool img {
+  margin: 7px;
+  width: 26px;
+  height: 26px;
+  transition: 0.2s;
+}
+
+.tool_button:disabled img {
+  opacity: 0.5;
+  margin: 5px;
+  width: 30px;
+  height: 30px;
+  }
+
+input[type="color"] {
+  width: 30px;
+  height: 30px;
+  margin:5px;
+  background-color: none;
+  background: none;
+  background: transparent;
+}
+
+input[type="color"]:hover {
+  margin: 7px;
+  width: 26px;
+  height: 26px;
+  transition: 0.2s;
+}
+
+input[type="number"] {
+  width: 40px;
 }
 
 #board {
     clear: both;
     box-sizing: border-box;
     position: relative;
-    min-height: 400px;
-    width: 96%;
-    margin: 0 auto;
-    padding-bottom: 2%;
+    z-index: 0;
+    top: -78px;
+    padding: 108px 30px 30px 30px;
+    width: 100%;
+    min-height: 100%;
     background-color: #efefef;
-    -webkit-border-radius: 0 0 5px 5px;
-    -moz-border-radius: 0 0 5px 5px;
-    border-radius: 0 0 5px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #board h2 {
@@ -135,10 +172,11 @@ td {
     margin: 0px;
     box-sizing: border-box;
 }
+td:hover {
+  box-shadow: inset 0px 0px 5px 0 rgba(90,90,90,0.75);
+}
 
 #pixel_canvas {
-    position: relative;
-    margin: 0 auto 0 auto;
     background-color: #fff;
     -webkit-box-shadow: 2px 2px 5px 0 rgba(90,90,90,0.75);
     border: 2px solid black;
@@ -159,3 +197,38 @@ table {
   display: none;
 }
 
+.brush {
+  cursor: url('../img/cursors/brush_cursor.png') 0 30, default;
+}
+
+.eyedropper {
+  cursor: url('../img/cursors/eyedropper_cursor.png') 0 30, default;
+}
+
+.erase {
+  cursor: url('../img/cursors/erase_cursor.png') 0 30, default;
+}
+#forPrint {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 1.5cm;
+  }
+
+  h1,
+  #toolbars_panel,
+  #board {
+    display: none;
+  }
+
+  #forPrint {
+    display: block;
+    margin-top: 2cm;
+  }
+}
