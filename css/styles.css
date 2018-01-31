@@ -217,10 +217,6 @@ table {
     margin: 0;
   }
 
-  body {
-    margin: 1.5cm;
-  }
-
   h1,
   #toolbars_panel,
   #board {
@@ -229,6 +225,6 @@ table {
 
   #forPrint {
     display: block;
-    margin-top: 2cm;
+    margin: 1cm;
   }
 }

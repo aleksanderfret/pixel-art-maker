@@ -70,6 +70,7 @@ $( document ).ready(function() {
       pixelCanvasInputHeight.val(rowsNumber);
       pixelCanvasInputWidth.val(colsNumber);
       makeGrid(rowsNumber, colsNumber);
+      resetActionsHistory();
     });
 
 
@@ -298,6 +299,15 @@ $( document ).ready(function() {
       setUndo(true);
     }
 
+    /**
+     * @description Resets undo and redo features
+     */
+    function resetActionsHistory() {
+      actionsUndoHistory.length = 0;
+      actionsRedoHistory.length = 0;
+      setUndo(false);
+      setRedo(false);
+    }
 
 
 
@@ -494,6 +504,7 @@ $( document ).ready(function() {
     // Clears painting
     $('#clear_painting').on('click', function cellBrushCleanHandler() {
       pixelCanvas.find('td').css('background-color', backgroundColor);
+      resetActionsHistory();
     });
 
     /**
