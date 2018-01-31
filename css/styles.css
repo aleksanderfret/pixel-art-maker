@@ -7,6 +7,7 @@ body {
     background-color: #333;
     margin: 0px;
     padding: 0px;
+    background-color: #efefef;
 }
 
 #painter {
@@ -17,7 +18,7 @@ body {
     margin: 0px;
     padding: 0px;
     bottom: 0px;
-    background-color: #e2e2e2;
+    background-color: #efefef;
 }
 
 h1 {
@@ -25,6 +26,7 @@ h1 {
     font-size: 1.2em;
     font-weight: 300;
     padding: 4px;
+    height: 20px;
     z-index: 1;
     margin: 0;
     color: white;
@@ -41,6 +43,13 @@ h1 {
     text-align: left;
 }
 
+@media screen and (max-width:830px){
+  #toolbars_panel {
+    height: auto;
+    text-align: center;
+  }
+}
+
 form {
   padding: 0px;
   margin: 0px;
@@ -53,7 +62,7 @@ form {
   box-sizing: border-box;
   font-size: 0.9em;
   height: 40px;
-  padding: 5px 0px;
+  margin: 5px 0px;
   border-right: 1px solid rgb(160, 160, 160);
 }
 
@@ -91,7 +100,8 @@ input {
   width: 30px;
 }
 
-.tool_button:enabled:hover {
+.tool_button:enabled:hover,
+.active_tool {
   background-color: rgb(150, 150, 150);
   transition: 0.2s;
   box-shadow: inset 0px 0px 5px 0px rgba(40, 40, 40, 0.75);
@@ -99,7 +109,8 @@ input {
 }
 
 .tool_button:hover img,
-.tool_button:hover input {
+.tool_button:hover input,
+.active_tool img {
   margin: 7px;
   width: 26px;
   height: 26px;
@@ -129,15 +140,19 @@ input[type="color"]:hover {
   transition: 0.2s;
 }
 
+input[type="number"] {
+  width: 40px;
+}
+
 #board {
     clear: both;
     box-sizing: border-box;
     position: relative;
-    top: -140px;
     z-index: 0;
-    padding: 160px 0 50px 0;
-    min-height: 100%;
+    top: -78px;
+    padding: 108px 30px 30px 30px;
     width: 100%;
+    min-height: 100%;
     background-color: #efefef;
     display: flex;
     flex-direction: column;
@@ -182,3 +197,38 @@ table {
   display: none;
 }
 
+.brush {
+  cursor: url('../img/cursors/brush_cursor.png') 0 30, default;
+}
+
+.eyedropper {
+  cursor: url('../img/cursors/eyedropper_cursor.png') 0 30, default;
+}
+
+.erase {
+  cursor: url('../img/cursors/erase_cursor.png') 0 30, default;
+}
+#forPrint {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 1.5cm;
+  }
+
+  h1,
+  #toolbars_panel,
+  #board {
+    display: none;
+  }
+
+  #forPrint {
+    display: block;
+    margin-top: 2cm;
+  }
+}

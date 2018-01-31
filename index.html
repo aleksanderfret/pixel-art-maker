@@ -13,10 +13,19 @@
           <button
             class="tool_button"
             type="button"
-            name="clear"
-            id="clear_canvas"
-            title="Clear painting and reset: borders, background, brush."
-            ><img src="img/clear.png" alt="Clear"></button>
+            name="new_canvas"
+            id="new_canvas"
+            title="New canvas."
+            ><img src="img/new.png" alt="New canvas."></button>
+        </div>
+        <div class="tools">
+          <button
+            class="tool_button"
+            type="button"
+            name="print"
+            id="print"
+            title="Print painting."
+            ><img src="img/print.png" alt="Print."></button>
         </div>
         <div class="tools">
           <button
@@ -120,9 +129,9 @@
       </div>
     </div>
     <div id="board">
-        <!-- <h2>Design Canvas</h2> -->
       <table id="pixel_canvas"></table>
     </div>
+    <div id="forPrint"></div>
 </div>
 <a href="#" id="save" class="tool_button" download="pixel-art_maker.png">Download</a>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
