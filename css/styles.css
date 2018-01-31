@@ -141,9 +141,24 @@ input[type="color"]:hover {
 }
 
 input[type="number"] {
-  width: 40px;
+  width: 45px;
+  padding-left: 3px;
 }
+label {
+  box-sizing: border-box;
+  position: relative;
+  padding: 5px 3px 0 3px;
+  margin: 5px 0;
+  float: left;
+  right: -3px;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 1.3em;
+  height: 30px;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
 
+}
 #board {
     clear: both;
     box-sizing: border-box;

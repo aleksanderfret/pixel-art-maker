@@ -406,7 +406,7 @@ $( document ).ready(function() {
      $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
       pixelCanvas.find('td').toggleClass('bordered_cells');
       $(this).attr('title', (displayBorders) ? 'Show borders.' : 'Hide borders.');
-      $(this).find('img').attr('src', (displayBorders) ? 'img/borders_on.png' : 'img/borders_off.png');
+      $(this).find('img').attr('src', (displayBorders) ? 'img/icons/borders_on.png' : 'img/icons/borders_off.png');
       displayBorders = !displayBorders;
     });
 
