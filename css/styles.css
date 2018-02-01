@@ -69,7 +69,7 @@ form {
 .tools {
   display: inline-block;
   height:  40px;
-  margin: 0px 3px;
+  margin: 0px 5px;
 }
 .tool_button {
   padding: 0px;
@@ -157,8 +157,8 @@ label {
   height: 30px;
   color: #fff;
   background-color: rgba(255, 255, 255, 0.3);
-
 }
+
 #board {
     clear: both;
     box-sizing: border-box;
