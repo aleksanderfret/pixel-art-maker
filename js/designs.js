@@ -14,6 +14,8 @@ $( document ).ready(function() {
     const brushTool = $('#brush');
     const eraseTool = $('#erase');
     const eyedropperTool = $('#eyedropper');
+    const appLayout = $('#panel, .toolbar, #board');
+    const appLabels = $('.toolbar_label, .tool_label');
 
     // Captures initial values from DOM elements
     const initialBrushColor = colorPicker.val();
@@ -190,12 +192,12 @@ $( document ).ready(function() {
     $('#help').on('click', function toggleToolbarLabels(){
       if(!dispalyLabels) {
         $(this).addClass('active_tool ');
-        $('.toolbar_label, .tool_label').addClass('show_labels');
-        $('#panel, .toolbar, #board').addClass('labelsShowed');
+        appLabels.addClass('show_labels');
+        appLayout.addClass('labelsShowed');
       } else {
         $(this).removeClass('active_tool ');
-        $('.toolbar_label, .tool_label').removeClass('show_labels');
-        $('#panel, .toolbar, #board').removeClass('labelsShowed');
+        appLabels.removeClass('show_labels');
+        appLayout.removeClass('labelsShowed');
       }
       dispalyLabels = !dispalyLabels;
     });
