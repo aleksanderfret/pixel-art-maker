@@ -7,125 +7,216 @@
 <body>
 <div id="painter">
     <h1>Pixel Art Maker</h1>
-    <div id="toolbars_panel">
+    <div id="panel">
       <div class="toolbar">
-        <div class="tools">
-          <button
-            class="tool_button"
-            type="button"
-            name="new_canvas"
-            id="new_canvas"
-            title="New canvas."
-            ><img src="img/icons/new.png" alt="New canvas."></button>
-        </div>
-        <div class="tools">
-          <button
-            class="tool_button"
-            type="button"
-            name="print"
-            id="print"
-            title="Print painting."
-            ><img src="img/icons/print.png" alt="Print."></button>
-        </div>
-        <div class="tools">
-          <button
+        <div class="toolbar_label">general</div>
+        <ul>
+          <li class="tool">
+            <button
+              class="tool_button"
+              type="button"
+              name="new_canvas"
+              id="new_canvas"
+              title="New canvas.">
+              <img src="img/icons/new.png" alt="New canvas.">
+            </button>
+            <div class="tool_label">new</div>
+          </li>
+          <li class="tool">
+            <button
+              class="tool_button"
+              type="button"
+              name="print"
+              id="print"
+              title="Print painting.">
+              <img src="img/icons/print.png" alt="Print.">
+            </button>
+            <div class="tool_label">print</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="save"
             id="save_image"
-            title="Save painting as image."><img src="img/icons/save.png" alt="Save"></button>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="tools">
-          <button
+            title="Save painting as image.">
+            <img src="img/icons/save.png" alt="Save">
+          </button>
+          <div class="tool_label">save</div>
+          </li>
+          <li class="tool">
+            <button
+              class="tool_button"
+              type="button"
+              name="help"
+              id="help"
+              title="Show labels.">
+              <img src="img/icons/help.png" alt="Help">
+            </button>
+            <div class="tool_label">help</div>
+            </li>
+        </ul>
+      </div><!--
+   --><div class="toolbar">
+        <div class="toolbar_label">actions</div>
+        <ul>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="undo"
             id="undo"
             title="Undo last action."
-            disabled><img src="img/icons/undo.png" alt="Undo"></button>
-          <button
+            disabled>
+            <img src="img/icons/undo.png" alt="Undo">
+          </button>
+          <div class="tool_label">undo</div>
+            </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="redo"
             id="redo"
             title="Redo last action."
-            disabled><img src="img/icons/redo.png" alt="Redo"></button>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="tools">
-          <form id="size_picker">
-            <label for="input_height">H:</label>
-            <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100.">
-            <label for="input_width">W:</label>
-            <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100.">
+            disabled>
+            <img src="img/icons/redo.png" alt="Redo">
+          </button>
+          <div class="tool_label">redo</div>
+          </li>
+        </ul>
+      </div><!--
+   --><div class="toolbar">
+        <div class="toolbar_label">grid settings</div>
+        <ul>
+          <li class="tool">
+            <form id="size_picker">
+              <label for="input_height">H:</label>
+              <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100.">
+              <label for="input_width">W:</label>
+              <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100.">
+              <button
+                class="tool_button"
+                type="submit"
+                name="draw_grid"
+                id="draw_grid"
+                title="Draw grid.">
+                <img src="img/icons/grid.png" alt="Draw">
+              </button>
+              <div class="tool_label">grid dimensions</div>
+            </form>
+          </li>
+        </ul>
+      </div><!--
+   --><div class="toolbar">
+        <div class="toolbar_label">cell borders</div>
+        <ul>
+          <li class="tool">
+            <div class="tool_button">
+              <input type="color" id="border_color_picker" title="Set borders color." value="#d3d3d3">
+           </div>
+           <div class="tool_label">color</div>
+          </li>
+          <li class="tool">
             <button
-              class="tool_button"
-              type="submit"
-              name="draw_grid"
-              id="draw_grid"
-              title="Draw grid."><img src="img/icons/grid.png" alt="Draw"></button>
-          </form>
-        </div>
-        <div class="tools">
-          <input type="color" id="border_color_picker" title="Set borders color." value="#d3d3d3">
-          <button
             class="tool_button"
             type="button"
             name="borders"
             id="borders_switcher"
-            title="Hide borders."><img src="img/icons/borders_off.png" alt="Hide borders"></button>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="tools">
-          <div class="tool_button">
-            <input type="color" id="background_color_picker" value="#ffffff" title="Set background color.">
-          </div>
-          <button
+            title="Hide borders.">
+            <img src="img/icons/borders_off.png" alt="Hide borders">
+          </button>
+          <div class="tool_label">off</div>
+          </li>
+        </ul>
+      </div><!--
+   --><div class="toolbar">
+        <div class="toolbar_label">canvas background</div>
+        <ul>
+          <li class="tool">
+            <div class="tool_button">
+              <input type="color" id="background_color_picker" value="#ffffff" title="Set background color.">
+            </div>
+            <div class="tool_label">color</div>
+          </li>
+          <li  class="tool">
+            <button
             class="tool_button"
             type="button"
             name="fill"
             id="fill"
-            title="Color the background."><img src="img/icons/fill.png" alt="Color the background."></button>
-          <button
+            title="Color the background.">
+            <img src="img/icons/fill.png" alt="Color the background.">
+          </button>
+          <div class="tool_label">fill</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="background_cleaner"
             id="background_cleaner"
-            title="Clear the background."><img src="img/icons/unfill.png" alt="Clear the background."></button>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="tools">
-          <input type="color" id="color_picker" title="Set brush color.">
-          <button
+            title="Clear the background.">
+            <img src="img/icons/unfill.png" alt="Clear the background.">
+          </button>
+          <div class="tool_label">clear</div>
+          </li>
+        </ul>
+      </div><!--
+   --><div class="toolbar">
+        <div class="toolbar_label">tools</div>
+        <ul>
+          <li class="tool">
+            <div class="tool_button">
+              <input type="color" id="color_picker" title="Set brush color.">
+            </div>
+            <div class="tool_label">color</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="brush"
             id="brush"
-            title="Brush."><img src="img/icons/brush.png" alt="Brush"></button>
-          <button
+            title="Brush.">
+            <img src="img/icons/brush.png" alt="Brush">
+          </button>
+          <div class="tool_label">brush</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="clear_painting"
             id="clear_painting"
-            title="Clear painting."><img src="img/icons/unbrush.png"  alt="Clear painting"></button>
-          <button
+            title="Clear painting.">
+            <img src="img/icons/unbrush.png" alt="Clear painting">
+          </button>
+          <div class="tool_label">clear</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="erase"
             id="erase"
-            title="Erase brush."><img src="img/icons/erase.png"  alt="Erase"></button>
-          <button
+            title="Erase brush.">
+            <img src="img/icons/erase.png"  alt="Erase">
+          </button>
+          <div class="tool_label">eraser</div>
+          </li>
+          <li class="tool">
+            <button
             class="tool_button"
             type="button"
             name="eyedropper"
             id="eyedropper"
-            title="Choose colors with the eyedropper."><img src="img/icons/eyedropper.png"  alt="Eyedropper"></button>
-        </div>
+            title="Choose colors with the eyedropper.">
+            <img src="img/icons/eyedropper.png"  alt="Eyedropper">
+          </button>
+          <div class="tool_label">dropper</div>
+          </li>
+        </ul>
       </div>
     </div>
     <div id="board">

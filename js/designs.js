@@ -40,7 +40,8 @@ $( document ).ready(function() {
     let redoEnabled = false;
     let undoEnabled = false;
 
-    // Variables to tools features
+    // Variables
+    let dispalyLabels = false;
     let originalCellColor;
     let currentTool = '';
     const toolToggles = {
@@ -181,6 +182,23 @@ $( document ).ready(function() {
       canvas.setAttribute('height', height);
       return canvas;
     }
+
+
+
+    //////////////////// HELP FEATURES ////////////////////
+    // Toggle toolbar labels
+    $('#help').on('click', function toggleToolbarLabels(){
+      if(!dispalyLabels) {
+        $(this).addClass('active_tool ');
+        $('.toolbar_label, .tool_label').addClass('show_labels');
+        $('#panel, .toolbar, #board').addClass('labelsShowed');
+      } else {
+        $(this).removeClass('active_tool ');
+        $('.toolbar_label, .tool_label').removeClass('show_labels');
+        $('#panel, .toolbar, #board').removeClass('labelsShowed');
+      }
+      dispalyLabels = !dispalyLabels;
+    });
 
 
 
@@ -405,8 +423,16 @@ $( document ).ready(function() {
      // Hides or shows cell borders
      $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
       pixelCanvas.find('td').toggleClass('bordered_cells');
-      $(this).attr('title', (displayBorders) ? 'Show borders.' : 'Hide borders.');
-      $(this).find('img').attr('src', (displayBorders) ? 'img/icons/borders_on.png' : 'img/icons/borders_off.png');
+      if (displayBorders) {
+        $(this).attr('title', 'Show borders.');
+        $(this).find('img').attr('src', 'img/icons/borders_on.png');
+        $(this).siblings().text('on');
+      } else {
+        $(this).attr('title', 'Hide borders.');
+        $(this).find('img').attr('src', 'img/icons/borders_off.png');
+        $(this).siblings().text('off');
+
+      }
       displayBorders = !displayBorders;
     });
 

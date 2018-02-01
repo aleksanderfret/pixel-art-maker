@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed|Ubuntu:300,400,700');
 @import url('https://fonts.googleapis.com/css?family=Monoton');
 
+* {
+  transition: all 0.5s;
+}
+
 body {
     text-align: center;
     font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;
@@ -34,19 +38,30 @@ h1 {
     text-align: left;
 }
 
-#toolbars_panel {
+#panel {
     position: relative;
     z-index: 1;
     width: 100%;
     height: 50px;
     background-color: rgb(180, 180, 180);
     text-align: left;
+    transition: all 0.5s
 }
 
-@media screen and (max-width:830px){
-  #toolbars_panel {
+#panel.labelsShowed {
+  height: 90px;
+}
+
+@media screen and (max-width:1050px){
+  #panel {
     height: auto;
     text-align: center;
+  }
+}
+
+@media screen and (max-width:1050px){
+  #panel.labelsShowed {
+    height: auto;
   }
 }
 
@@ -58,19 +73,77 @@ form {
 }
 
 .toolbar {
+  list-style: none;
   display: inline-block;
   box-sizing: border-box;
   font-size: 0.9em;
   height: 40px;
-  margin: 5px 0px;
-  border-right: 1px solid rgb(160, 160, 160);
+  margin: 5px 0;
+  padding: 0px;
+  transition: all 0.5s;
+  border-right: 1px solid rgb(140, 140, 140);
+  position: relative;
 }
 
-.tools {
+.toolbar.labelsShowed {
+  height: 80px;
+}
+
+@media screen and (max-width:1050px){
+  .toolbar {
+    height: auto;
+    border-left: 1px solid rgb(160, 160, 160);
+  }
+}
+
+@media screen and (max-width:1050px){
+  .toolbar.labelsShowed {
+    height: auto;
+    margin-bottom: 15px;
+  }
+}
+
+ul {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: all 0.5s;
+}
+
+.toolbar_label,
+.tool_label {
+  visibility: hidden;
+  height: 1px;
+  width: 100%;
+  color: #fff;
+  font-size: 1em;
+  text-align: center;
+  transition: all 0.5s;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: all 0.5;
+  position: absolute;
+}
+
+.toolbar_label {
+  text-transform: uppercase;
+}
+.show_labels {
+  visibility: visible;
+  height: 20px;
+  transform: scaleY(1);
+  position: relative;
+}
+
+.tool {
+  position: relative;
   display: inline-block;
   height:  40px;
-  margin: 0px 5px;
+  margin: 0 5px;
+  transition: all 0.5s;
 }
+
 .tool_button {
   padding: 0px;
   border: none;
@@ -79,6 +152,7 @@ form {
   display: inline-block;
   width: 40px;
   height: 40px;
+  transition: all 0.5s;
 }
 
 .tool_button img {
@@ -86,6 +160,7 @@ form {
   margin: 5px;
   width: 30px;
   height: 30px;
+  transition: all 0.5s;
 }
 
 input {
@@ -98,6 +173,7 @@ input {
   border: none;
   height: 30px;
   width: 30px;
+  transition: all 0.5s;
 }
 
 .tool_button:enabled:hover,
@@ -144,6 +220,7 @@ input[type="number"] {
   width: 45px;
   padding-left: 3px;
 }
+
 label {
   box-sizing: border-box;
   position: relative;
@@ -174,9 +251,32 @@ label {
     justify-content: center;
 }
 
-#board h2 {
-    color: #444;
-    padding: 0.75rem 0 0;
+#board.labelsShowed {
+  top: -118px;
+  padding-top: 148px;
+}
+
+@media screen and (max-width:1050px){
+  #board {
+    height: auto;
+    top: -134px;
+    padding-top: 164px;
+  }
+  #board.labelsShowed {
+    top: -226px;
+    padding-top: 256px;
+  }
+}
+
+@media screen and (max-width:530px){
+  #board {
+    top: -187px;
+    padding-top: 217px;
+  }
+  #board.labelsShowed {
+    top: -325px;
+    padding-top: 355px;
+  }
 }
 
 table,
