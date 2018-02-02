@@ -513,11 +513,11 @@ $( document ).ready(function() {
       pixelCanvas.on('mouseover', 'td', paintHandler);
 
       // Stops painting on mouseup event
-      $('body').one('mouseup', function stopPaintingHandler(event) {
+      $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
         event.preventDefault();
         pixelCanvas.off('mouseover', 'td', paintHandler);
         registerAction();
-        $(event.target).trigger('paintingStopped');
+        $('td').trigger('paintingStopped');
       });
     }
 
@@ -662,3 +662,12 @@ $( document ).ready(function() {
 
   })();
 });
+
+// TODO wand (the same tool)
+// TODO wand (all the same tool)
+// TODO fill (to fill neighborhood cells)
+// TODO one color picker
+// TODO new icons to background color
+// TODO colors history
+// TODO color swatches
+// TODO all cell changes to action history
