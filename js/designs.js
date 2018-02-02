@@ -663,6 +663,7 @@ $( document ).ready(function() {
   })();
 });
 
+// TODO colors history
 // TODO wand (the same tool)
 // TODO wand (all the same tool)
 // TODO fill (to fill neighborhood cells)
@@ -671,3 +672,4 @@ $( document ).ready(function() {
 // TODO colors history
 // TODO color swatches
 // TODO all cell changes to action history
+// TODO change table, tr, td to divs
