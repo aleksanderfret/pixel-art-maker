@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed|Ubuntu:300,400,700');
 @import url('https://fonts.googleapis.com/css?family=Monoton');
 
-* {
-  transition: all 0.5s;
-}
-
 body {
     text-align: center;
     font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;

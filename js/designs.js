@@ -403,7 +403,7 @@ $( document ).ready(function() {
       event.preventDefault();
       colsNumber = pixelCanvasInputWidth.val();
       rowsNumber = pixelCanvasInputHeight.val();
-
+      resetActionsHistory();
       makeGrid(rowsNumber, colsNumber);
     });
 
@@ -517,7 +517,7 @@ $( document ).ready(function() {
         event.preventDefault();
         pixelCanvas.off('mouseover', 'td', paintHandler);
         registerAction();
-        $('td').trigger('paintingStopped');
+        $(event.target).trigger('paintingStopped');
       });
     }
 
