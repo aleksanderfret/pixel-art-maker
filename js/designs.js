@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(document).ready(function() {
   // iife for encapsulation
   (function pixelArtMaker() {
     // Gets DOM elements
@@ -284,14 +284,15 @@ $( document ).ready(function() {
     /**
      * @description Saves id and background color of modyfied cells
      */
-    function registerModyfyingCells(event) {
+    function startRegisterCell(event) {
       const currentCell = $(event.target);
       const currentCellId = currentCell.attr('id');
-
-
       const currentBackgroundColor = currentCell.css('background-color');
       const backgroundToRegister = (rgb2hex(currentBackgroundColor) === backgroundColor) ? null : currentBackgroundColor;
 
+      // Clear redo history
+      actionsRedoHistory.length = 0;
+      setRedo(false);
       if (isNotRegistered(currentCellId)) {
         const cellData = {
           id: currentCell.attr('id'),
@@ -372,7 +373,7 @@ $( document ).ready(function() {
         cellId = 'y'+row;
         for (let col = 1; col <= width; col++) {
           cellId = cellId + 'x'+col;
-          grid += '<td id="'+cellId+'"></td>';
+          grid += '<td id="'+cellId+'" data-y="'+row+'" data-x="'+col+'"></td>';
           cellId = 'y'+row;
         }
         grid += '</tr>';
@@ -471,7 +472,7 @@ $( document ).ready(function() {
 
     //////////////////// TOOLS GENERAL AND COMMON FEATURES ////////////////////
     // Runs tools: brush, erase or eyedropper
-    $('#brush, #erase, #eyedropper').on('click', function onToolClickHandler(event) {
+    $('.tool').on('click', function onToolClickHandler(event) {
       // Stop current tool
       if (currentTool) {
         board.removeClass(currentTool);
@@ -488,25 +489,80 @@ $( document ).ready(function() {
       }
     });
 
+
+    function findCells(cell) {
+      const currentCell = $(cell);
+      const currentBackgroundColor = currentCell.css('background-color');
+      const checkedCells = [];
+      const finalArea = [];
+
+      function findNewSameColoredCell(currentCell) {
+        const lastAddedCells = [];
+        const neighbours = findNeighbours(currentCell);
+        neighbours.forEach(function(neighbour, index) {
+          if (!(checkedCells.includes(neighbour[0]))) {
+            if (neighbour.css('background-color') === currentBackgroundColor) {
+              lastAddedCells.push(neighbour);
+              finalArea.push(neighbour[0]);
+            }
+            checkedCells.push(neighbour[0]);
+          }
+          lastAddedCells.forEach(function(lastAddedCell, index){
+            findNewSameColoredCell(lastAddedCell);
+          });
+        });
+      }
+
+      finalArea.push(cell);
+      checkedCells.push(cell);
+      findNewSameColoredCell(currentCell);
+
+      return finalArea;
+    }
+
+    pixelCanvas.on('dblclick', 'td', function(){
+      findCells(event.target);
+    })
+
+    function findNeighbours(currentCell) {
+      const xCoord = currentCell.attr('data-x');
+      const yCoord = currentCell.attr('data-y');
+      const tempArray = [];
+      tempArray[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
+      tempArray[1] = currentCell.next('td');
+      tempArray[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
+      tempArray[3] = currentCell.prev('td');
+      return tempArray;
+    }
+
+
+
+    // function cellPainter(cellsToPaint, color) {
+    //   if (cellsToPaint) {
+    //     $(cellsToPaint).each(function colorCell(index, cell){
+    //       $(cell).css('background-color', color);
+    //     });
+    //     $(cell).trigger('colored');
+    //   }
+    // }
+
     /**
      * @description Changes color of the grid cell
      * @param {object} event
      */
     function paintHandler(event) {
       event.preventDefault();
-      registerModyfyingCells(event);
+      startRegisterCell(event);
       const newColor = (currentTool === 'erase') ? backgroundColor : brushColor;
       $(event.target).css('background-color', newColor);
+      //cellPainter(event.target, newColor);
+
     }
 
     // Starts painting
     function startPaintingHandler(event) {
       event.preventDefault();
       $(event.target).trigger('paintingStarted');
-
-      // Clear redo history
-      actionsRedoHistory.length = 0;
-      setRedo(false);
 
       // Paints current cell and additionally starts handling painting on mouseover event
       paintHandler(event);
@@ -517,11 +573,9 @@ $( document ).ready(function() {
         event.preventDefault();
         pixelCanvas.off('mouseover', 'td', paintHandler);
         registerAction();
-        $('td').trigger('paintingStopped');
+        $(event.target).trigger('paintingStopped');
       });
     }
-
-
 
     //////////////////// BRUSH FEATURE ////////////////////
     // Sets brush color value on colorPicker change

@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed|Ubuntu:300,400,700');
 @import url('https://fonts.googleapis.com/css?family=Monoton');
 
-* {
-  transition: all 0.5s;
-}
-
 body {
     text-align: center;
     font-family: 'Ubuntu Condensed', Ubuntu, Verdana, Arial, sans-serif;
@@ -136,7 +132,7 @@ ul {
   position: relative;
 }
 
-.tool {
+.tools {
   position: relative;
   display: inline-block;
   height:  40px;
@@ -144,7 +140,7 @@ ul {
   transition: all 0.5s;
 }
 
-.tool_button {
+.toolButton {
   padding: 0px;
   border: none;
   background: none;
@@ -155,7 +151,7 @@ ul {
   transition: all 0.5s;
 }
 
-.tool_button img {
+.toolButton img {
   display: inline-block;
   margin: 5px;
   width: 30px;
@@ -177,7 +173,7 @@ input {
   transition: all 0.5s;
 }
 
-.tool_button:enabled:hover,
+.toolButton:enabled:hover,
 .active_tool {
   background-color: rgb(150, 150, 150);
   transition: 0.2s;
@@ -185,8 +181,8 @@ input {
   border-radius: 5px;
 }
 
-.tool_button:hover img,
-.tool_button:hover input,
+.toolButton:hover img,
+.toolButton:hover input,
 .active_tool img {
   margin: 7px;
   width: 26px;
@@ -194,7 +190,7 @@ input {
   transition: 0.2s;
 }
 
-.tool_button:disabled img {
+.toolButton:disabled img {
   opacity: 0.5;
   margin: 5px;
   width: 30px;
