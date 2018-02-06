@@ -197,19 +197,13 @@ input {
   height: 30px;
   }
 
-#border_color_picker::-webkit-color-swatch-wrapper,
-#border_color_picker::-webkit-color-swatch,
-#background_color_picker::-webkit-color-swatch-wrapper,
-#background_color_picker::-webkit-color-swatch,
-#color_picker::-webkit-color-swatch-wrapper,
-#color_picker::-webkit-color-swatch {
+#main_color_picker::-webkit-color-swatch-wrapper,
+#main_color_picker::-webkit-color-swatch {
 	padding: 0;
 	border: none;
 }
 
-#border_color_picker,
-#background_color_picker,
-#color_picker
+#main_color_picker
  {
   width: 30px;
   height: 30px;
@@ -219,9 +213,7 @@ input {
   background: none;
 }
 
-#border_color_picker:hover,
-#background_color_picker:hover,
-#color_picker:hover {
+#main_color_picker:hover {
   margin: 7px;
   width: 26px;
   height: 26px;
@@ -359,18 +351,24 @@ table {
 .main_color {
   box-sizing: border-box;
   border: 1px solid #fff;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   position: relative;
   border-radius: 5px;
 }
 
 #bg-color {
-  background-color: red;
+  background-color: #ffffff;
   margin: 5px 0 0 5px;
 }
 
-#br-color {
-  background-color: blue;
-  margin: -10px 0 0 15px;
+#bd-color {
+  background-color: #d3d3d3;
+  margin: -24px 0 0 37px;
 }
+
+#br-color {
+  background-color: #000000;
+  margin: -16px 0 0 21px;
+}
+

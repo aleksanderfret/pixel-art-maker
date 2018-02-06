@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="painter">
-    <h1>Pixel Art Maker 2.1.1</h1>
+    <h1>Pixel Art Maker 2.1.2</h1>
     <div id="panel">
       <div class="toolbar">
         <div class="toolbar_label">general</div>
@@ -17,7 +17,7 @@
               type="button"
               name="new_canvas"
               id="new_canvas"
-              title="New canvas.">
+              title="New canvas">
               <img src="img/icons/new.png" alt="New canvas.">
             </button>
             <div class="tool_label">new</div>
@@ -28,7 +28,7 @@
               type="button"
               name="print"
               id="print"
-              title="Print painting.">
+              title="Print painting">
               <img src="img/icons/print.png" alt="Print.">
             </button>
             <div class="tool_label">print</div>
@@ -39,7 +39,7 @@
             type="button"
             name="save"
             id="save_image"
-            title="Save painting as image.">
+            title="Save painting as image">
             <img src="img/icons/save.png" alt="Save">
           </button>
           <div class="tool_label">save</div>
@@ -50,7 +50,7 @@
               type="button"
               name="help"
               id="help"
-              title="Show labels.">
+              title="Show labels">
               <img src="img/icons/help.png" alt="Help">
             </button>
             <div class="tool_label">help</div>
@@ -66,7 +66,7 @@
             type="button"
             name="undo"
             id="undo"
-            title="Undo last action."
+            title="Undo last action"
             disabled>
             <img src="img/icons/undo.png" alt="Undo">
           </button>
@@ -78,7 +78,7 @@
             type="button"
             name="redo"
             id="redo"
-            title="Redo last action."
+            title="Redo last action"
             disabled>
             <img src="img/icons/redo.png" alt="Redo">
           </button>
@@ -92,15 +92,15 @@
           <li class="tools">
             <form id="size_picker">
               <label for="input_height">H:</label>
-              <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100.">
+              <input type="number" id="input_height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100">
               <label for="input_width">W:</label>
-              <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100.">
+              <input type="number" id="input_width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100">
               <button
                 class="toolButton"
                 type="submit"
                 name="draw_grid"
                 id="draw_grid"
-                title="Draw grid.">
+                title="Draw grid">
                 <img src="img/icons/grid.png" alt="Draw">
               </button>
               <div class="tool_label">dimensions</div>
@@ -109,43 +109,42 @@
         </ul>
       </div><!--
    --><div class="toolbar">
-        <div class="toolbar_label">cell borders</div>
+        <div class="toolbar_label">borders</div>
         <ul>
-          <li class="tools">
-            <div class="toolButton">
-              <input type="color" id="border_color_picker" title="Set borders color." value="#d3d3d3">
-           </div>
-           <div class="tool_label">color</div>
-          </li>
           <li class="tools">
             <button
             class="toolButton"
             type="button"
             name="borders"
             id="borders_switcher"
-            title="Hide borders.">
+            title="Hide borders">
             <img src="img/icons/borders_off.png" alt="Hide borders">
           </button>
           <div class="tool_label">off</div>
           </li>
+          <li class="tools">
+            <button
+              class="toolButton"
+              type="button"
+              name="color_borders"
+              id="color_borders"
+              title="Color borders">
+              <img src="img/icons/borders_color.png" alt="Color borders">
+            </button>
+            <div class="tool_label">color</div>
+            </li>
         </ul>
       </div><!--
    --><div class="toolbar">
-        <div class="toolbar_label">canvas background</div>
+        <div class="toolbar_label">background</div>
         <ul>
-          <li class="tools">
-            <div class="toolButton">
-              <input type="color" id="background_color_picker" value="#ffffff" title="Set background color.">
-            </div>
-            <div class="tool_label">color</div>
-          </li>
           <li  class="tools">
             <button
             class="toolButton"
             type="button"
             name="fill"
             id="fill"
-            title="Color the background.">
+            title="Color the background">
             <img src="img/icons/canvas_color.png" alt="Color the background.">
           </button>
           <div class="tool_label">fill</div>
@@ -156,7 +155,7 @@
             type="button"
             name="background_cleaner"
             id="background_cleaner"
-            title="Clear the background.">
+            title="Clear the background">
             <img src="img/icons/canvas_uncolor.png" alt="Clear the background.">
           </button>
           <div class="tool_label">clear</div>
@@ -167,18 +166,12 @@
         <div class="toolbar_label">tools</div>
         <ul>
           <li class="tools">
-            <div class="toolButton">
-              <input type="color" id="color_picker" title="Set brush color.">
-            </div>
-            <div class="tool_label">color</div>
-          </li>
-          <li class="tools">
             <button
               class="toolButton tool"
               type="button"
               name="brush"
               id="brush"
-              title="Brush.">
+              title="Brush">
               <img src="img/icons/brush.png" alt="Brush">
           </button>
           <div class="tool_label">brush</div>
@@ -189,7 +182,7 @@
               type="button"
               name="clear_painting"
               id="clear_painting"
-              title="Clear painting.">
+              title="Clear painting">
               <img src="img/icons/unbrush.png" alt="Clear painting">
           </button>
           <div class="tool_label">clear</div>
@@ -200,7 +193,7 @@
               type="button"
               name="erase"
               id="erase"
-              title="Erase brush.">
+              title="Erase brush">
               <img src="img/icons/erase.png"  alt="Erase">
             </button>
           <div class="tool_label">eraser</div>
@@ -211,35 +204,25 @@
               type="button"
               name="eyedropper"
               id="eyedropper"
-              title="Choose colors with the eyedropper.">
+              title="Choose colors with the eyedropper">
               <img src="img/icons/eyedropper.png"  alt="Eyedropper">
             </button>
           <div class="tool_label">dropper</div>
           </li>
-          <li class="tools">
-            <button
-              class="toolButton"
-              type="button"
-              name="wand"
-              id="wand"
-              title="Select same cells.">
-              <img src="img/icons/wand.png"  alt="Wand">
-            </button>
-          <div class="tool_label">wand</div>
-          </li>
         </ul>
       </div>
       <div class="toolbar">
-        <div class="toolbar_label">colors</div>
+        <div class="toolbar_label">colors panel</div>
         <ul>
           <li class="tools">
             <div id="bg-color" class="main_color"></div>
+            <div id="bd-color" class="main_color"></div>
             <div id="br-color" class="main_color"></div>
             <div class="tool_label">colors</div>
           </li>
           <li class="tools">
             <div class="toolButton">
-              <input type="color" id="main_color_picker" title="Set color.">
+              <input type="color" id="main_color_picker" title="Set color">
             </div>
             <div class="tool_label">picker</div>
           </li>

@@ -4,9 +4,6 @@ $(document).ready(pixelArtMaker);
  function pixelArtMaker() {
   // Gets DOM elements
   const pixelCanvas = $('#pixel_canvas');
-  const colorPicker = $('#color_picker');
-  const backgroundColorPicker = $('#background_color_picker');
-  const borderColorPicker = $('#border_color_picker');
   const pixelCanvasInputHeight = $('#input_height');
   const pixelCanvasInputWidth = $('#input_width');
   const board = $('#board');
@@ -17,22 +14,26 @@ $(document).ready(pixelArtMaker);
   const eyedropperTool = $('#eyedropper');
   const appLayout = $('#panel, .toolbar, #board');
   const appLabels = $('.toolbar_label, .tool_label');
+  const mainColorPicker = $('#main_color_picker');
+  const colorborders = $('#color_borders');
 
   // Captures initial values from DOM elements
-  const initialBrushColor = colorPicker.val();
-  const initialBackgroundColor = backgroundColorPicker.val();
-  const initialBorderColor = borderColorPicker.val();
+  const initialBrushColor = mainColorPicker.val();
+  const initialBackgroundColor = '#ffffff';
+  const initialBorderColor = '#d3d3d3';
   const initialColsNumber = pixelCanvasInputWidth.val();
   const initialRowsNumber = pixelCanvasInputHeight.val();
   const initialCellDimension = 20;
+  const initialColor = mainColorPicker.val();
 
   // Sets current values based on initial values
   let colsNumber = initialColsNumber;
   let rowsNumber = initialRowsNumber;
   let cellDimension = initialCellDimension;
-  let brushColor = initialBrushColor;
+  let brushColor = initialColor;
   let backgroundColor = initialBackgroundColor;
   let borderColor = initialBorderColor;
+  let mainColor = initialColor;
   let displayBorders = true;
 
   // Variables to redo and undo features
@@ -50,9 +51,7 @@ $(document).ready(pixelArtMaker);
   const toolToggles = {
     brush: toggleBrushTool,
     erase: toggleEraseTool,
-    //eyedropper: toggleEyedropperTool,
-    //wand: toggleWandTool,
-    //fill: toggleFillTool
+    eyedropper: toggleEyedropperTool,
   }
 
   // Draws initial grid
@@ -66,13 +65,12 @@ $(document).ready(pixelArtMaker);
     backgroundColor = initialBackgroundColor;
     brushColor = initialBrushColor;
     borderColor = initialBorderColor;
+    mainColor = initialColor;
     displayBorders = true;
     colsNumber = initialColsNumber;
     rowsNumber = initialRowsNumber;
 
-    colorPicker[0].value = brushColor;
-    backgroundColorPicker[0].value = backgroundColor;
-    borderColorPicker[0].value = borderColor;
+    mainColorPicker[0].value = mainColor;
     pixelCanvasInputHeight.val(rowsNumber);
     pixelCanvasInputWidth.val(colsNumber);
     makeGrid(rowsNumber, colsNumber);
@@ -311,7 +309,7 @@ $(document).ready(pixelArtMaker);
   function registerAction() {
     const action = {
       changedCells: modyfiedCells.slice(0),
-      newBackgroundColor: brushColor
+      newBackgroundColor: mainColor
     };
 
     if(actionsUndoHistory.length >= numberOfUndos) {
@@ -319,8 +317,7 @@ $(document).ready(pixelArtMaker);
     }
     actionsUndoHistory.push(action);
 
-    modyfiedCells.length = 0
-    console.log(action);
+    modyfiedCells.length = 0;
     setUndo(true);
   }
 
@@ -418,14 +415,15 @@ $(document).ready(pixelArtMaker);
   })
 
 
-
-
   //////////////////// CELL BORDERS FEATURES ////////////////////
-  // Sets border color on borderColorPicker change
-  borderColorPicker.on('change', function borderColorChangeHandler() {
-    borderColor = $(this).val();
+  // Sets border color on button color borders
+  colorborders.on('click', function borderColorChangeHandler() {
+    borderColor = mainColorPicker.val();
     pixelCanvas.find('td').css('border-color', borderColor);
+    $('#bd-color').css('background-color', borderColor);
   });
+
+
 
    // Hides or shows cell borders
    $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
@@ -448,15 +446,15 @@ $(document).ready(pixelArtMaker);
   //////////////////// BACKGROUND COLOR FEATURES ////////////////////
   // Changes cell background color on fill button click
   $('#fill').on('click', function canvasBbackgroundColorChangeHandler() {
-    cellBackgroundChanger(backgroundColor, backgroundColorPicker.val());
-    backgroundColor = backgroundColorPicker.val();
+    cellBackgroundChanger(backgroundColor, mainColorPicker.val());
+    backgroundColor = mainColorPicker.val();
+    $('#bg-color ').css('background-color', backgroundColor);
   });
 
   // Clean background color on button click
   $('#background_cleaner').on('click', function cellBackgroundCleanHandler() {
     cellBackgroundChanger(backgroundColor, initialBackgroundColor);
     backgroundColor = initialBackgroundColor;
-    backgroundColorPicker[0].value = backgroundColor;
   });
 
   /**
@@ -475,6 +473,11 @@ $(document).ready(pixelArtMaker);
 
 
   //////////////////// TOOLS GENERAL AND COMMON FEATURES ////////////////////
+  // Sets main color value on colorPicker change
+  mainColorPicker.on('change', function colorChangeHandler() {
+    mainColor = $(this).val();
+  });
+
   // Runs tools: brush, erase or eyedropper
   $('.tool').on('click', function onToolClickHandler(event) {
     // Stop current tool
@@ -493,50 +496,11 @@ $(document).ready(pixelArtMaker);
     }
   });
 
-
-  function findCells(cell) {
-    const currentCell = $(cell);
-    const currentBackgroundColor = currentCell.css('background-color');
-    const checkedCells = [];
-    const finalArea = [];
-
-    function findNewSameColoredCell(currentCell) {
-      const lastAddedCells = [];
-      const neighbours = findNeighbours(currentCell);
-      neighbours.forEach(function(neighbour, index) {
-        if (!(checkedCells.includes(neighbour[0]))) {
-          if (neighbour.css('background-color') === currentBackgroundColor) {
-            lastAddedCells.push(neighbour);
-            finalArea.push(neighbour[0]);
-          }
-          checkedCells.push(neighbour[0]);
-        }
-        lastAddedCells.forEach(function(lastAddedCell, index){
-          findNewSameColoredCell(lastAddedCell);
-        });
-      });
-    }
-
-    finalArea.push(cell);
-    checkedCells.push(cell);
-    findNewSameColoredCell(currentCell);
-
-    return finalArea;
-  }
-
-  function findNeighbours(currentCell) {
-    const xCoord = currentCell.attr('data-x');
-    const yCoord = currentCell.attr('data-y');
-    const tempArray = [];
-    tempArray[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
-    tempArray[1] = currentCell.next('td');
-    tempArray[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
-    tempArray[3] = currentCell.prev('td');
-    return tempArray;
-  }
-
-
-
+  /**
+   * @description paints cells
+   * @param {array/string} cellsToPaint - array of cells or cell
+   * @param color - new color
+   */
   function cellPainter(cellsToPaint, color) {
     if ($.isArray(cellsToPaint)) {
       $(cellsToPaint).forEeach(function colorCell(cell, index){
@@ -555,13 +519,14 @@ $(document).ready(pixelArtMaker);
   function paintHandler(event) {
     event.preventDefault();
     startRegisterCell(event);
-    const newColor = (currentTool === 'erase') ? backgroundColor : brushColor;
+    const newColor = (currentTool === 'erase') ? backgroundColor : mainColor;
     //$(event.target).css('background-color', newColor);
     cellPainter(event.target, newColor);
   }
 
   // Starts painting
   function startPaintingHandler(event) {
+    $('#br-color').css('background-color', mainColor);
     event.preventDefault();
     $(event.target).trigger('paintingStarted');
 
@@ -581,11 +546,6 @@ $(document).ready(pixelArtMaker);
   }
 
   //////////////////// BRUSH FEATURE ////////////////////
-  // Sets brush color value on colorPicker change
-  colorPicker.on('change', function colorChangeHandler() {
-    brushColor = $(this).val();
-  });
-
   // Clears painting
   $('#clear_painting').on('click', function cellBrushCleanHandler() {
     pixelCanvas.find('td').css('background-color', backgroundColor);
@@ -617,7 +577,7 @@ $(document).ready(pixelArtMaker);
     } else if (event.type === 'paintingStopped') {
       // we have to manually set originalCellColor, because until now
       // preview feature was off and this variable is outdated
-      originalCellColor = brushColor;
+      originalCellColor = mainColor;
       pixelCanvas.on('mouseenter mouseleave', 'td', brushPreviewHandler);
     }
   }
@@ -630,7 +590,7 @@ $(document).ready(pixelArtMaker);
     let color = originalCellColor;
     if(event.type === 'mouseenter') {
       originalCellColor = $(this).css('background-color');
-      color = brushColor;
+      color = mainColor;
     }
     $(this).css({
       'background-color': color
@@ -697,8 +657,53 @@ $(document).ready(pixelArtMaker);
    */
   function getColorHandler(event) {
     const gottenColor = $(event.target).css('background-color');
-    colorPicker.val(rgb2hex(gottenColor));
-    brushColor = gottenColor;
+    mainColorPicker.val(rgb2hex(gottenColor));
+    mainColor = gottenColor;
+  }
+
+
+
+   //////////////////// FILL FEATURE ////////////////////
+   //////////////////// under construction ////////////////////
+   function findCells(cell) {
+    const currentCell = $(cell);
+    const currentBackgroundColor = currentCell.css('background-color');
+    const checkedCells = [];
+    const finalArea = [];
+
+    function findNewSameColoredCell(currentCell) {
+      const lastAddedCells = [];
+      const neighbours = findNeighbours(currentCell);
+      neighbours.forEach(function(neighbour, index) {
+        if (!(checkedCells.includes(neighbour[0]))) {
+          if (neighbour.css('background-color') === currentBackgroundColor) {
+            lastAddedCells.push(neighbour);
+            finalArea.push(neighbour[0]);
+          }
+          checkedCells.push(neighbour[0]);
+        }
+        lastAddedCells.forEach(function(lastAddedCell, index){
+          findNewSameColoredCell(lastAddedCell);
+        });
+      });
+    }
+
+    finalArea.push(cell);
+    checkedCells.push(cell);
+    findNewSameColoredCell(currentCell);
+
+    return finalArea;
+  }
+
+  function findNeighbours(currentCell) {
+    const xCoord = currentCell.attr('data-x');
+    const yCoord = currentCell.attr('data-y');
+    const tempArray = [];
+    tempArray[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
+    tempArray[1] = currentCell.next('td');
+    tempArray[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
+    tempArray[3] = currentCell.prev('td');
+    return tempArray;
   }
 
 
