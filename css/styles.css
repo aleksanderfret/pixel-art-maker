@@ -355,3 +355,22 @@ table {
     margin: 1cm;
   }
 }
+
+.main_color {
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  border-radius: 5px;
+}
+
+#bg-color {
+  background-color: red;
+  margin: 5px 0 0 5px;
+}
+
+#br-color {
+  background-color: blue;
+  margin: -10px 0 0 15px;
+}
