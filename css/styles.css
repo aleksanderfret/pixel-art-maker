@@ -242,7 +242,7 @@ label {
     position: relative;
     z-index: 0;
     top: -78px;
-    padding: 108px 30px 30px 30px;
+    padding: 108px 30px 70px 30px;
     width: 100%;
     min-height: 100%;
     background-color: #efefef;
@@ -354,36 +354,6 @@ table {
   }
 }
 
-#markers {
-  padding: 0;
-  display: inline-block;
-  width: 72px;
-  height: 40px;
-}
-
-.main_color {
-  box-sizing: border-box;
-  border: 1px solid #fff;
-  width: 24px;
-  height: 24px;
-  position: relative;
-  border-radius: 5px;
-}
-#bg-color {
-  background-color: #ffffff;
-  margin: 5px 0 0 5px;
-}
-
-#bd-color {
-  background-color: #d3d3d3;
-  margin: -24px 0 0 37px;
-}
-
-#br-color {
-  background-color: #000000;
-  margin: -16px 0 0 21px;
-}
-
 #swatches {
   padding: 0;
   display: inline-block;
@@ -485,5 +455,68 @@ table {
   background-color: #ffffff;
 }
 
+#status_bar {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 10px 0;
+  background-color: rgb(180, 180, 180);
+  top: -118px;
+  text-align: left;
+}
 
+.status-info {
+  display: inline-block;
+  box-sizing: border-box;
+  color: #fff;
+  margin: 0;
+  padding: 0 15px;
+  border-right: 1px solid rgb(140, 140, 140);
+}
 
+#status_bar .status-info:last-child {
+  border: none;
+}
+.status-info > div {
+  display: inline-block;
+}
+
+.status-info-label {
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+#markers {
+  display: inline-block;
+}
+
+#markers li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#markers li:last-child {
+  margin-right: 0px;
+}
+
+.main_color {
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+#bg-color {
+  background-color: #ffffff;
+}
+
+#bd-color {
+  background-color: #d3d3d3;
+}
+
+#br-color {
+  background-color: #000000;
+}

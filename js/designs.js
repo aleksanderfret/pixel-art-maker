@@ -479,14 +479,19 @@ $(document).ready(pixelArtMaker);
    */
   function cellBackgroundChanger(oldColor, newColor){
     pixelCanvas.trigger('actionStart');
+    let counter = 0;
     pixelCanvas.find('td').each(function filterCellsWithOldBackground(index, el) {
       if (rgb2hex($(el).css('background-color')) === oldColor) {
         $(el).trigger('register',[newColor]);
         cellPainter(el, newColor);
+        counter++;
       }
     });
-    backgroundColor = newColor;
-    bgColor.css('background-color', backgroundColor);
+    if (counter > 0) {
+      backgroundColor = newColor;
+      bgColor.css('background-color', backgroundColor);
+    }
+
     pixelCanvas.trigger('actionStop',['background']);
   }
 
@@ -549,7 +554,9 @@ $(document).ready(pixelArtMaker);
 
   // Starts painting
   function startPaintingHandler(event) {
-    brColor.css('background-color', mainColor);
+    if (currentTool === 'brush') {
+      brColor.css('background-color', mainColor);
+    }
     event.preventDefault();
     $(event.target).trigger('actionStart');
 
@@ -784,10 +791,17 @@ $(document).ready(pixelArtMaker);
       ('0' + parseInt(rgbValues[3], 10).toString(16)).slice(-2) : '';
   }
 
+  pixelCanvas.on('mouseover', 'td', function getCellPosition() {
+    const xCoord = $(this).attr('data-x');
+    const yCoord = $(this).attr('data-y');
+    $('#coordinates').html('X: ' + xCoord + ' Y: ' + yCoord);
+  });
+
 }
 
 // TODO wand (the same tool)
 // TODO wand (all the same tool)
 // TODO colors history
 // TODO change table, tr, td to divs
-// TODO status bar/panel - cell coordinates, active tool, copyright
+// TODO RWD
+// TODO fix firefox board size

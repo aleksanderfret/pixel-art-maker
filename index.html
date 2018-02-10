@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="painter">
-    <h1>Pixel Art Maker 2.2.0</h1>
+    <h1>Pixel Art Maker 2.2.1</h1>
     <div id="panel">
       <div class="toolbar">
         <div class="toolbar_label">general</div>
@@ -225,14 +225,6 @@
         <div class="toolbar_label">colors panel</div>
         <ul>
           <li class="tools">
-            <div id="markers">
-              <div id="bg-color" class="main_color"></div>
-              <div id="bd-color" class="main_color"></div>
-              <div id="br-color" class="main_color"></div>
-            </div>
-            <div class="tool_label">colors</div>
-          </li>
-          <li class="tools">
             <div class="toolButton">
               <input type="color" id="main_color_picker" title="Set color">
             </div>
@@ -268,6 +260,26 @@
     </div>
     <div id="board" oncontextmenu="return false">
       <table id="pixel_canvas"></table>
+    </div>
+    <div id="status_bar">
+      <div id="position" class="status-info">
+        <div class="status-info-label">position:</div>
+        <div id="coordinates">none</div>
+      </div><!--
+   --><div id="colors" class="status-info">
+        <div class="status-info-label">colors:</div>
+        <div id="markers">
+          <ul>
+            <li><span id="br-color" class="main_color"></span><span>Brush</span></li>
+            <li><span id="bg-color" class="main_color"></span><span>Background</span></li>
+            <li><span id="bd-color" class="main_color"></span><span>Borders</span></li>
+          </ul>
+        </div>
+      </div><!--
+   --><div id="autor" class="status-info">
+        <div class="status-info-label">made by:</div>
+        <div>Aleksander Fret on the Google Challenge Scholarship.</div>
+      </div>
     </div>
     <div id="forPrint"></div>
 </div>
