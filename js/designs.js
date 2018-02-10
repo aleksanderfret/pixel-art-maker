@@ -507,7 +507,7 @@ $(document).ready(pixelArtMaker);
     mainColor = newColor;
   })
 
-  // Runs tools: brush, erase or eyedropper
+  // Runs tools: brush, erase, fill or eyedropper
   $('.tool').on('click', function onToolClickHandler(event) {
     // Stop current tool
     if (currentTool) {
@@ -521,7 +521,11 @@ $(document).ready(pixelArtMaker);
     board.addClass(currentTool);
     $(this).addClass('active_tool');
     if (currentTool) {
-      toolToggles[currentTool](true);
+      if (typeof toolToggles[currentTool] === "function") {
+        toolToggles[currentTool](true);
+      } else {
+        currentTool = '';
+      }
     }
   });
 
