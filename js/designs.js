@@ -443,8 +443,6 @@ $(document).ready(pixelArtMaker);
     bdColor.css('background-color', borderColor);
   });
 
-
-
    // Hides or shows cell borders
    $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
     pixelCanvas.find('td').toggleClass('bordered_cells');

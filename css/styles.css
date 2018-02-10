@@ -345,7 +345,12 @@ table {
 
   #forPrint {
     display: block;
-    margin: 1cm;
+  }
+
+  #forPrint img {
+    display: block;
+    max-width: 0%;
+    margin: 1cm auto;
   }
 }
 
