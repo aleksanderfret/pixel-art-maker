@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="painter">
-    <h1>Pixel Art Maker 2.1.2</h1>
+    <h1>Pixel Art Maker 2.2.0</h1>
     <div id="panel">
       <div class="toolbar">
         <div class="toolbar_label">general</div>
@@ -142,8 +142,8 @@
             <button
             class="toolButton"
             type="button"
-            name="fill"
-            id="fill"
+            name="color_background"
+            id="color_background"
             title="Color the background">
             <img src="img/icons/canvas_color.png" alt="Color the background.">
           </button>
@@ -153,8 +153,8 @@
             <button
             class="toolButton"
             type="button"
-            name="background_cleaner"
-            id="background_cleaner"
+            name="clean_background"
+            id="clean_background"
             title="Clear the background">
             <img src="img/icons/canvas_uncolor.png" alt="Clear the background.">
           </button>
@@ -165,6 +165,16 @@
    --><div class="toolbar">
         <div class="toolbar_label">tools</div>
         <ul>
+          <li class="tools">
+              <button
+                class="toolButton tool"
+                type="button"
+                name="fill"
+                id="fill"
+                title="Fill">
+                <img src="img/icons/fill.png" alt="Fill">
+            </button>
+            <div class="tool_label">fill</div>
           <li class="tools">
             <button
               class="toolButton tool"
@@ -180,8 +190,8 @@
             <button
               class="toolButton"
               type="button"
-              name="clear_painting"
-              id="clear_painting"
+              name="paint_cleaner"
+              id="paintCleaner"
               title="Clear painting">
               <img src="img/icons/unbrush.png" alt="Clear painting">
           </button>
@@ -210,14 +220,16 @@
           <div class="tool_label">dropper</div>
           </li>
         </ul>
-      </div>
-      <div class="toolbar">
+      </div><!--
+   --><div class="toolbar">
         <div class="toolbar_label">colors panel</div>
         <ul>
           <li class="tools">
-            <div id="bg-color" class="main_color"></div>
-            <div id="bd-color" class="main_color"></div>
-            <div id="br-color" class="main_color"></div>
+            <div id="markers">
+              <div id="bg-color" class="main_color"></div>
+              <div id="bd-color" class="main_color"></div>
+              <div id="br-color" class="main_color"></div>
+            </div>
             <div class="tool_label">colors</div>
           </li>
           <li class="tools">
@@ -225,6 +237,31 @@
               <input type="color" id="main_color_picker" title="Set color">
             </div>
             <div class="tool_label">picker</div>
+          </li>
+          <li class="tools">
+            <ul id="swatches">
+              <li id="pink" class="swatch" title="Pink"></li>
+              <li id="purple" class="swatch" title="Purple"></li>
+              <li id="violet" class="swatch" title="Violet"></li>
+              <li id="dark-blue" class="swatch" title="Dark blue"></li>
+              <li id="blue" class="swatch" title="Blue"></li>
+              <li id="light-blue" class="swatch" title="Light blue"></li>
+              <li id="turquoise" class="swatch" title="Turquoise"></li>
+              <li id="sea-green" class="swatch" title="Sea green"></li>
+              <li id="dark-green" class="swatch" title="Dark green"></li>
+              <li id="green" class="swatch" title="Green"></li>
+              <li id="lime" class="swatch" title="Lime"></li>
+              <li id="yellow" class="swatch" title="Yellow"></li>
+              <li id="gold" class="swatch" title="Gold"></li>
+              <li id="orange" class="swatch" title="Orange"></li>
+              <li id="dark-orange" class="swatch" title="Dark orange"></li>
+              <li id="red" class="swatch" title="Red"></li>
+              <li id="brown" class="swatch" title="Brown"></li>
+              <li id="black" class="swatch" title="Black"></li>
+              <li id="gray" class="swatch" title="Gray"></li>
+              <li id="white" class="swatch" title="White"></li>
+            </ul>
+            <div class="tool_label">swatches</div>
           </li>
         </ul>
       </div>

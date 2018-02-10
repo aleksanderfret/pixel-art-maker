@@ -16,6 +16,9 @@ $(document).ready(pixelArtMaker);
   const appLabels = $('.toolbar_label, .tool_label');
   const mainColorPicker = $('#main_color_picker');
   const colorborders = $('#color_borders');
+  const bgColor = $('#bg-color');
+  const bdColor = $('#bd-color');
+  const brColor = $('#br-color');
 
   // Captures initial values from DOM elements
   const initialBrushColor = mainColorPicker.val();
@@ -52,6 +55,7 @@ $(document).ready(pixelArtMaker);
     brush: toggleBrushTool,
     erase: toggleEraseTool,
     eyedropper: toggleEyedropperTool,
+    fill: toggleFillTool
   }
 
   // Draws initial grid
@@ -75,6 +79,9 @@ $(document).ready(pixelArtMaker);
     pixelCanvasInputWidth.val(colsNumber);
     makeGrid(rowsNumber, colsNumber);
     resetActionsHistory();
+    bgColor.css('background-color', backgroundColor);
+    bdColor.css('background-color', borderColor);
+    brColor.css('background-color', brushColor);
   });
 
 
@@ -94,7 +101,6 @@ $(document).ready(pixelArtMaker);
     event.preventDefault();
     createTemporaryImage('save');
   });
-
 
 
 
@@ -212,12 +218,11 @@ $(document).ready(pixelArtMaker);
     for (let i = 0; i < lastAction.changedCells.length; i++) {
       const tdSelector = '#' + lastAction.changedCells[i].id;
       const cell = pixelCanvas.find(tdSelector);
-      const registerBackgroundColor = lastAction.changedCells[i].oldBackground;
-      const newBackgroundColor = registerBackgroundColor || backgroundColor;
-
-      cell.css({
-        'background-color': newBackgroundColor
-      });
+      const newBackgroundColor = lastAction.changedCells[i].oldBackground;
+      cellPainter(cell[0], newBackgroundColor);
+    }
+    if (lastAction.action === 'background') {
+      backgroundColor = lastAction.changedCells[0].oldBackground;
     }
     actionsRedoHistory.push(lastAction);
     setRedo(true);
@@ -232,9 +237,11 @@ $(document).ready(pixelArtMaker);
     for (let i = 0; i < lastAction.changedCells.length; i++) {
       const tdSelector = '#' + lastAction.changedCells[i].id;
       const cell = pixelCanvas.find(tdSelector);
-      cell.css({
-        'background-color': lastAction.newBackgroundColor
-      });
+      const newBackgroundColor = lastAction.changedCells[i].newBackground;
+      cellPainter(cell[0], newBackgroundColor);
+    }
+    if (lastAction.action === 'background') {
+      backgroundColor = lastAction.changedCells[0].newBackground;
     }
     actionsUndoHistory.push(lastAction);
     setUndo(true);
@@ -285,11 +292,10 @@ $(document).ready(pixelArtMaker);
   /**
    * @description Saves id and background color of modyfied cells
    */
-  function startRegisterCell(event) {
-    const currentCell = $(event.target);
+  function startRegisterCell(coloredCell, newColor) {
+    const currentCell = $(coloredCell);
     const currentCellId = currentCell.attr('id');
-    const currentBackgroundColor = currentCell.css('background-color');
-    const backgroundToRegister = (rgb2hex(currentBackgroundColor) === backgroundColor) ? null : currentBackgroundColor;
+    const backgroundToRegister = currentCell.css('background-color');
 
     // Clear redo history
     actionsRedoHistory.length = 0;
@@ -297,26 +303,27 @@ $(document).ready(pixelArtMaker);
     if (isNotRegistered(currentCellId)) {
       const cellData = {
         id: currentCell.attr('id'),
-        oldBackground: backgroundToRegister
+        oldBackground: backgroundToRegister,
+        newBackground: newColor
       };
+
       modyfiedCells.push(cellData);
     }
   }
 
   /**
    * @description Saves as an object modyfied cells and curret brush color
+   * @param {string} currentAction - checks kind of modyfication
    */
-  function registerAction() {
+  function registerAction(currentAction) {
     const action = {
       changedCells: modyfiedCells.slice(0),
-      newBackgroundColor: mainColor
+      action: currentAction
     };
-
     if(actionsUndoHistory.length >= numberOfUndos) {
       actionsUndoHistory.shift();
     }
     actionsUndoHistory.push(action);
-
     modyfiedCells.length = 0;
     setUndo(true);
   }
@@ -330,6 +337,18 @@ $(document).ready(pixelArtMaker);
     setUndo(false);
     setRedo(false);
   }
+
+  // Registers modyfying cell on register event
+  pixelCanvas.on('register', function(event, newColor){
+    startRegisterCell(event.target, newColor);
+  });
+
+  // Saves firs action on actionStop event
+  pixelCanvas.on('actionStop', function(event, action){
+    if (modyfiedCells.length>0) {
+      registerAction(action);
+    }
+  });
 
 
 
@@ -415,12 +434,13 @@ $(document).ready(pixelArtMaker);
   })
 
 
+
   //////////////////// CELL BORDERS FEATURES ////////////////////
   // Sets border color on button color borders
   colorborders.on('click', function borderColorChangeHandler() {
     borderColor = mainColorPicker.val();
     pixelCanvas.find('td').css('border-color', borderColor);
-    $('#bd-color').css('background-color', borderColor);
+    bdColor.css('background-color', borderColor);
   });
 
 
@@ -436,7 +456,6 @@ $(document).ready(pixelArtMaker);
       $(this).attr('title', 'Hide borders.');
       $(this).find('img').attr('src', 'img/icons/borders_off.png');
       $(this).siblings().text('off');
-
     }
     displayBorders = !displayBorders;
   });
@@ -445,16 +464,14 @@ $(document).ready(pixelArtMaker);
 
   //////////////////// BACKGROUND COLOR FEATURES ////////////////////
   // Changes cell background color on fill button click
-  $('#fill').on('click', function canvasBbackgroundColorChangeHandler() {
+  $('#color_background').on('click', function canvasBbackgroundColorChangeHandler() {
     cellBackgroundChanger(backgroundColor, mainColorPicker.val());
-    backgroundColor = mainColorPicker.val();
-    $('#bg-color ').css('background-color', backgroundColor);
   });
 
   // Clean background color on button click
-  $('#background_cleaner').on('click', function cellBackgroundCleanHandler() {
+  $('#clean_background').on('click', function cellBackgroundCleanHandler() {
     cellBackgroundChanger(backgroundColor, initialBackgroundColor);
-    backgroundColor = initialBackgroundColor;
+    mainColor = initialBackgroundColor;
   });
 
   /**
@@ -462,12 +479,17 @@ $(document).ready(pixelArtMaker);
    * @param {string} oldColor
    * @param {string} newColor
    */
-  function cellBackgroundChanger(oldColor, newColor) {
+  function cellBackgroundChanger(oldColor, newColor){
+    pixelCanvas.trigger('actionStart');
     pixelCanvas.find('td').each(function filterCellsWithOldBackground(index, el) {
       if (rgb2hex($(el).css('background-color')) === oldColor) {
-        $(el).css('background-color', newColor);
+        $(el).trigger('register',[newColor]);
+        cellPainter(el, newColor);
       }
     });
+    backgroundColor = newColor;
+    bgColor.css('background-color', backgroundColor);
+    pixelCanvas.trigger('actionStop',['background']);
   }
 
 
@@ -477,6 +499,13 @@ $(document).ready(pixelArtMaker);
   mainColorPicker.on('change', function colorChangeHandler() {
     mainColor = $(this).val();
   });
+
+  // Sets swatch color as a main color
+  $('.swatch').on('click', function setSwatchColorAsMainColor() {
+    const newColor = rgb2hex($(this).css('background-color'));
+    mainColorPicker.val(newColor);
+    mainColor = newColor;
+  })
 
   // Runs tools: brush, erase or eyedropper
   $('.tool').on('click', function onToolClickHandler(event) {
@@ -497,19 +526,12 @@ $(document).ready(pixelArtMaker);
   });
 
   /**
-   * @description paints cells
-   * @param {array/string} cellsToPaint - array of cells or cell
-   * @param color - new color
+   * @description paints cell
+   * @param {string} cellToPaint - cell
+   * @param {string} color - new color
    */
-  function cellPainter(cellsToPaint, color) {
-    if ($.isArray(cellsToPaint)) {
-      $(cellsToPaint).forEeach(function colorCell(cell, index){
-        $(cell).css('background-color', color);
-      });
-    } else {
-      $(cellsToPaint).css('background-color', color);
-    }
-    $(cellsToPaint).trigger('colored');
+  function cellPainter(cellToPaint, color) {
+    $(cellToPaint).css('background-color', color);
   }
 
   /**
@@ -518,17 +540,16 @@ $(document).ready(pixelArtMaker);
    */
   function paintHandler(event) {
     event.preventDefault();
-    startRegisterCell(event);
     const newColor = (currentTool === 'erase') ? backgroundColor : mainColor;
-    //$(event.target).css('background-color', newColor);
+    $(event.target).trigger('register', [newColor]);
     cellPainter(event.target, newColor);
   }
 
   // Starts painting
   function startPaintingHandler(event) {
-    $('#br-color').css('background-color', mainColor);
+    brColor.css('background-color', mainColor);
     event.preventDefault();
-    $(event.target).trigger('paintingStarted');
+    $(event.target).trigger('actionStart');
 
     // Paints current cell and additionally starts handling painting on mouseover event
     paintHandler(event);
@@ -538,18 +559,102 @@ $(document).ready(pixelArtMaker);
     $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
       event.preventDefault();
       pixelCanvas.off('mouseover', 'td', paintHandler);
-      if (modyfiedCells.length>0) {
-        registerAction();
-      }
-      $(event.target).trigger('paintingStopped');
+      $(event.target).trigger('actionStop',['brush']);
     });
   }
 
+
+
+  //////////////////// FILL FEATURE ////////////////////
+  /**
+   * @description Toggles fill tool
+   * @param {boolean} toolState
+   */
+  function toggleFillTool(toolState) {
+    const toggleMethod = (toolState) ? 'on' : 'off';
+    pixelCanvas[toggleMethod]('click', 'td', fillHandler);
+  }
+
+  /**
+   * @description fills the same cells in the neighborhood
+   * @param {boolean} toolState
+   */
+  function fillHandler(event) {
+    event.preventDefault();
+    $(event.target).trigger('actionStart');
+    const newColor = mainColor;
+    const cells = findCells(event.target);
+    cells.forEach(function fillSameCells(cell, index) {
+      $(cell).trigger('register', [newColor]);
+      cellPainter(cell, newColor);
+    });
+    $(event.target).trigger('actionStop');
+  }
+
+  /**
+   * @description finds the same cells in the neighborhood
+   * @param {string} cell
+   * @return {array}
+   */
+   function findCells(cell) {
+    const currentCell = $(cell);
+    const currentBackgroundColor = currentCell.css('background-color');
+    const checkedCells = [];
+    const finalArea = [];
+
+    function findNewSameColoredCell(currentCell) {
+      const lastAddedCells = [];
+      const neighbors = findNeighbors(currentCell);
+      neighbors.forEach(function addSameNeighbors(neighbor, index) {
+        if (!(checkedCells.includes(neighbor[0]))) {
+          if (neighbor.css('background-color') === currentBackgroundColor) {
+            lastAddedCells.push(neighbor);
+            finalArea.push(neighbor[0]);
+          }
+          checkedCells.push(neighbor[0]);
+        }
+        lastAddedCells.forEach(function findSameForLastAddedCells(lastAddedCell, index){
+          findNewSameColoredCell(lastAddedCell);
+        });
+      });
+    }
+
+    finalArea.push(cell);
+    checkedCells.push(cell);
+    findNewSameColoredCell(currentCell);
+
+    return finalArea;
+  }
+
+  /**
+   * @description finds immediate cell neighbors
+   * @param {string} currentCell
+   * @return {array}
+   */
+  function findNeighbors(currentCell) {
+    const xCoord = currentCell.attr('data-x');
+    const yCoord = currentCell.attr('data-y');
+    const neighbors = [];
+    neighbors[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
+    neighbors[1] = currentCell.next('td');
+    neighbors[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
+    neighbors[3] = currentCell.prev('td');
+    return neighbors;
+  }
+
+
+
   //////////////////// BRUSH FEATURE ////////////////////
   // Clears painting
-  $('#clear_painting').on('click', function cellBrushCleanHandler() {
-    pixelCanvas.find('td').css('background-color', backgroundColor);
-    resetActionsHistory();
+  $('#paintCleaner').on('click', function cellBrushCleanHandler() {
+    pixelCanvas.trigger('actionStart');
+    pixelCanvas.find('td').each(function paintingCleaner(index, el) {
+      if (rgb2hex($(el).css('background-color')) !== backgroundColor) {
+        $(el).trigger('register',[backgroundColor]);
+        cellPainter(el, backgroundColor);
+      }
+    });
+    pixelCanvas.trigger('actionStop',['brush']);
   });
 
   /**
@@ -560,21 +665,21 @@ $(document).ready(pixelArtMaker);
     const toggleMethod = (toolState) ? 'on' : 'off';
     pixelCanvas[toggleMethod]('mousedown', 'td', startPaintingHandler);
     pixelCanvas[toggleMethod]('mouseenter mouseleave', 'td', brushPreviewHandler);
-    pixelCanvas[toggleMethod]('paintingStarted paintingStopped', 'td', toggleBrushPreviewHandler);
+    pixelCanvas[toggleMethod]('actionStart actionStop', 'td', toggleBrushPreviewHandler);
   }
 
   /**
    * @description Toggles brush preview
    */
   function toggleBrushPreviewHandler(event) {
-    if (event.type === 'paintingStarted') {
+    if (event.type === 'actionStart') {
       // we have to restore true (original) background color of the cell,
       // because in this moment it's changed by preview feature
       $(this).css({
         'background-color': originalCellColor
       });
       pixelCanvas.off('mouseenter mouseleave', 'td', brushPreviewHandler);
-    } else if (event.type === 'paintingStopped') {
+    } else if (event.type === 'actionStop') {
       // we have to manually set originalCellColor, because until now
       // preview feature was off and this variable is outdated
       originalCellColor = mainColor;
@@ -608,19 +713,19 @@ $(document).ready(pixelArtMaker);
     const toggleMethod = (toolState) ? 'on' : 'off';
     pixelCanvas[toggleMethod]('mousedown', 'td', startPaintingHandler);
     pixelCanvas[toggleMethod]('mouseenter mouseleave', 'td', erasePreviewHandler);
-    pixelCanvas[toggleMethod]('paintingStarted paintingStopped', 'td', toggleErasePreviewHandler);
+    pixelCanvas[toggleMethod]('actionStart actionStop', 'td', toggleErasePreviewHandler);
   }
 
   /**
    * @description Toggles erase preview
    */
   function toggleErasePreviewHandler(event) {
-    if (event.type === 'paintingStarted') {
+    if (event.type === 'actionStart') {
       pixelCanvas.off('mouseenter mouseleave', 'td', erasePreviewHandler);
       $(this).css({
         'opacity': 1
       });
-    } else if (event.type === 'paintingStopped') {
+    } else if (event.type === 'actionStop') {
       pixelCanvas.on('mouseenter mouseleave', 'td', erasePreviewHandler);
     }
   }
@@ -663,51 +768,6 @@ $(document).ready(pixelArtMaker);
 
 
 
-   //////////////////// FILL FEATURE ////////////////////
-   //////////////////// under construction ////////////////////
-   function findCells(cell) {
-    const currentCell = $(cell);
-    const currentBackgroundColor = currentCell.css('background-color');
-    const checkedCells = [];
-    const finalArea = [];
-
-    function findNewSameColoredCell(currentCell) {
-      const lastAddedCells = [];
-      const neighbours = findNeighbours(currentCell);
-      neighbours.forEach(function(neighbour, index) {
-        if (!(checkedCells.includes(neighbour[0]))) {
-          if (neighbour.css('background-color') === currentBackgroundColor) {
-            lastAddedCells.push(neighbour);
-            finalArea.push(neighbour[0]);
-          }
-          checkedCells.push(neighbour[0]);
-        }
-        lastAddedCells.forEach(function(lastAddedCell, index){
-          findNewSameColoredCell(lastAddedCell);
-        });
-      });
-    }
-
-    finalArea.push(cell);
-    checkedCells.push(cell);
-    findNewSameColoredCell(currentCell);
-
-    return finalArea;
-  }
-
-  function findNeighbours(currentCell) {
-    const xCoord = currentCell.attr('data-x');
-    const yCoord = currentCell.attr('data-y');
-    const tempArray = [];
-    tempArray[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
-    tempArray[1] = currentCell.next('td');
-    tempArray[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
-    tempArray[3] = currentCell.prev('td');
-    return tempArray;
-  }
-
-
-
   //////////////////// HELPERS ////////////////////
   /**
    * @description Converts rgb color to hex color
@@ -724,13 +784,8 @@ $(document).ready(pixelArtMaker);
 
 }
 
-// TODO colors history
 // TODO wand (the same tool)
 // TODO wand (all the same tool)
-// TODO fill (to fill neighborhood cells)
-// TODO one color picker
-// TODO new icons to background color
 // TODO colors history
-// TODO color swatches
-// TODO all cell changes to action history
 // TODO change table, tr, td to divs
+// TODO status bar/panel - cell coordinates, active tool, copyright
