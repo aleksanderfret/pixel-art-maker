@@ -518,10 +518,10 @@ $(document).ready(pixelArtMaker);
 
     // Sets and runs requested tool
     currentTool = $(event.currentTarget).attr('id');
-    board.addClass(currentTool);
-    $(this).addClass('active_tool');
     if (currentTool) {
       if (typeof toolToggles[currentTool] === "function") {
+        board.addClass(currentTool);
+        $(this).addClass('active_tool');
         toolToggles[currentTool](true);
       } else {
         currentTool = '';
