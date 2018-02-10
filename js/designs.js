@@ -406,6 +406,7 @@ $(document).ready(pixelArtMaker);
     setCellSize(pixelCanvas, calculateCellDimension(width));
   }
 
+<<<<<<< HEAD
   // Ensures that height and width will match the min and max attributes
   $('#input_width, #input_height').on('blur', function dimensionValidatorHandler() {
     const min = Number($(this).attr('min'));
@@ -427,6 +428,16 @@ $(document).ready(pixelArtMaker);
     resetActionsHistory();
     makeGrid(rowsNumber, colsNumber);
   });
+=======
+    // Creates the grid based on entered values, when grid size is submitted
+    $('#draw_grid').on('click', function setDimensionsHandler(event) {
+      event.preventDefault();
+      colsNumber = pixelCanvasInputWidth.val();
+      rowsNumber = pixelCanvasInputHeight.val();
+      resetActionsHistory();
+      makeGrid(rowsNumber, colsNumber);
+    });
+>>>>>>> master
 
   // Sets cell size when window size changed
   $(window).on('resize', function cellSizeChangeHandler() {
@@ -562,8 +573,36 @@ $(document).ready(pixelArtMaker);
     // Stops painting on mouseup event
     $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
       event.preventDefault();
+<<<<<<< HEAD
       pixelCanvas.off('mouseover', 'td', paintHandler);
       $(event.target).trigger('actionStop',['brush']);
+=======
+      $(event.target).trigger('paintingStarted');
+
+      // Clear redo history
+      actionsRedoHistory.length = 0;
+      setRedo(false);
+
+      // Paints current cell and additionally starts handling painting on mouseover event
+      paintHandler(event);
+      pixelCanvas.on('mouseover', 'td', paintHandler);
+
+      // Stops painting on mouseup event
+      $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
+        event.preventDefault();
+        pixelCanvas.off('mouseover', 'td', paintHandler);
+        registerAction();
+        $(event.target).trigger('paintingStopped');
+      });
+    }
+
+
+
+    //////////////////// BRUSH FEATURE ////////////////////
+    // Sets brush color value on colorPicker change
+    colorPicker.on('change', function colorChangeHandler() {
+      brushColor = $(this).val();
+>>>>>>> master
     });
   }
 
