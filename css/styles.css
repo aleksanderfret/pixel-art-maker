@@ -75,7 +75,7 @@ form {
   font-size: 0.9em;
   height: 40px;
   margin: 5px 0;
-  padding: 0px;
+  padding: 0;
   transition: all 0.5s;
   border-right: 1px solid rgb(140, 140, 140);
   position: relative;
@@ -132,7 +132,7 @@ ul {
   position: relative;
 }
 
-.tool {
+.tools {
   position: relative;
   display: inline-block;
   height:  40px;
@@ -140,7 +140,7 @@ ul {
   transition: all 0.5s;
 }
 
-.tool_button {
+.toolButton {
   padding: 0px;
   border: none;
   background: none;
@@ -151,7 +151,7 @@ ul {
   transition: all 0.5s;
 }
 
-.tool_button img {
+.toolButton img {
   display: inline-block;
   margin: 5px;
   width: 30px;
@@ -173,7 +173,7 @@ input {
   transition: all 0.5s;
 }
 
-.tool_button:enabled:hover,
+.toolButton:enabled:hover,
 .active_tool {
   background-color: rgb(150, 150, 150);
   transition: 0.2s;
@@ -181,8 +181,7 @@ input {
   border-radius: 5px;
 }
 
-.tool_button:hover img,
-.tool_button:hover input,
+.toolButton:hover img,
 .active_tool img {
   margin: 7px;
   width: 26px;
@@ -190,26 +189,20 @@ input {
   transition: 0.2s;
 }
 
-.tool_button:disabled img {
+.toolButton:disabled img {
   opacity: 0.5;
   margin: 5px;
   width: 30px;
   height: 30px;
   }
 
-#border_color_picker::-webkit-color-swatch-wrapper,
-#border_color_picker::-webkit-color-swatch,
-#background_color_picker::-webkit-color-swatch-wrapper,
-#background_color_picker::-webkit-color-swatch,
-#color_picker::-webkit-color-swatch-wrapper,
-#color_picker::-webkit-color-swatch {
+#main_color_picker::-webkit-color-swatch-wrapper,
+#main_color_picker::-webkit-color-swatch {
 	padding: 0;
 	border: none;
 }
 
-#border_color_picker,
-#background_color_picker,
-#color_picker
+#main_color_picker
  {
   width: 30px;
   height: 30px;
@@ -219,13 +212,8 @@ input {
   background: none;
 }
 
-#border_color_picker:hover,
-#background_color_picker:hover,
-#color_picker:hover {
-  margin: 7px;
-  width: 26px;
-  height: 26px;
-  transition: 0.2s;
+#main_color_picker:hover {
+  cursor: pointer;
 }
 
 input[type="number"] {
@@ -335,6 +323,11 @@ table {
 .erase {
   cursor: url('../img/cursors/erase_cursor.png') 0 30, default;
 }
+
+.fill {
+  cursor: url('../img/cursors/fill_cursor.png') 0 25, default;
+}
+
 #forPrint {
   display: none;
 }
@@ -345,7 +338,7 @@ table {
   }
 
   h1,
-  #toolbars_panel,
+  #panel,
   #board {
     display: none;
   }
@@ -355,3 +348,137 @@ table {
     margin: 1cm;
   }
 }
+
+#markers {
+  padding: 0;
+  display: inline-block;
+  width: 72px;
+  height: 40px;
+}
+
+.main_color {
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  border-radius: 5px;
+}
+#bg-color {
+  background-color: #ffffff;
+  margin: 5px 0 0 5px;
+}
+
+#bd-color {
+  background-color: #d3d3d3;
+  margin: -24px 0 0 37px;
+}
+
+#br-color {
+  background-color: #000000;
+  margin: -16px 0 0 21px;
+}
+
+#swatches {
+  padding: 0;
+  display: inline-block;
+  width: 600px;
+  height: 40px;
+}
+
+.swatch {
+  float: left;
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  margin: 5px 0;
+  transition: all 0.2s;
+}
+
+.swatch:hover {
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+#pink {
+  background-color: #ff00ff;
+}
+
+#purple {
+  background-color: #a008c2;
+}
+
+#violet {
+  background-color: #5d0a8a;
+}
+
+#dark-blue {
+  background-color: #19469e;
+}
+
+#blue {
+  background-color: #0c8ef2;
+}
+
+#light-blue {
+  background-color: #66ccf5;
+}
+
+#turquoise {
+  background-color: #06eda4;
+}
+
+#sea-green {
+  background-color: #03c15a;
+}
+
+#dark-green {
+  background-color: #00940f;
+}
+
+#green {
+  background-color: #00c914;
+}
+
+#lime {
+  background-color: #6aff00;
+}
+
+#yellow {
+  background-color: #ffff00;
+}
+
+#gold {
+  background-color: #ffd700;
+}
+
+#orange {
+  background-color: #ff9100;
+}
+
+#dark-orange {
+  background-color: #ff4900;
+}
+
+#red {
+  background-color: #ff0000;
+}
+
+#brown {
+  background-color: #85501f;
+}
+
+#black {
+  background-color: #000000;
+}
+
+#gray {
+  background-color: #808080;
+}
+
+#white {
+  background-color: #ffffff;
+}
+
+
+
