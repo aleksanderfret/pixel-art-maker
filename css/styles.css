@@ -343,7 +343,8 @@ table {
 
   h1,
   #panel,
-  #board {
+  #board,
+  #status_bar {
     display: none;
   }
 
@@ -460,6 +461,7 @@ table {
 }
 
 #status_bar {
+  clear: both;
   position: relative;
   width: 100%;
   height: 40px;
@@ -523,4 +525,12 @@ table {
 
 #br-color {
   background-color: #000000;
+}
+
+#side_bar {
+  float: left;
+  width: 40px;
+  position: relative;
+  min-height: 100%;
+  background-color: rgb(180, 180, 180);
 }
