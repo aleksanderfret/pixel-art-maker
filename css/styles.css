@@ -81,6 +81,10 @@ form {
   position: relative;
 }
 
+.toolbar:last-child {
+  border-right: none;
+}
+
 .toolbar.labelsShowed {
   height: 80px;
 }
