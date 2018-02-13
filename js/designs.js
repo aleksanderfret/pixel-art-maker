@@ -3,16 +3,16 @@ $(document).ready(pixelArtMaker);
 
  function pixelArtMaker() {
   // Gets DOM elements
-  const pixelCanvas = $('#pixel_canvas');
+  const pixelCanvas = $('#pixel-canvas');
   const pixelCanvasInputHeight = $('#input_height');
   const pixelCanvasInputWidth = $('#input_width');
-  const board = $('#board');
+  const board = $('#wrapper');
   const undo = $('#undo');
   const redo = $('#redo');
   const brushTool = $('#brush');
   const eraseTool = $('#erase');
   const eyedropperTool = $('#eyedropper');
-  const appLayout = $('#panel, .toolbar, #board');
+  const appLayout = $('#options, .toolbar, #wrapper');
   const appLabels = $('.toolbar_label, .tool_label');
   const mainColorPicker = $('#main_color_picker');
   const colorborders = $('#color_borders');
@@ -24,8 +24,8 @@ $(document).ready(pixelArtMaker);
   const initialBrushColor = mainColorPicker.val();
   const initialBackgroundColor = '#ffffff';
   const initialBorderColor = '#d3d3d3';
-  const initialColsNumber = pixelCanvasInputWidth.val();
-  const initialRowsNumber = pixelCanvasInputHeight.val();
+  const initialColsNumber = 10;//pixelCanvasInputWidth.val();
+  const initialRowsNumber = 10;//pixelCanvasInputHeight.val();
   const initialCellDimension = 20;
   const initialColor = mainColorPicker.val();
 
@@ -359,7 +359,7 @@ $(document).ready(pixelArtMaker);
    * @return {number}
    */
   function calculateCellDimension(colNumber) {
-    const boardWidth = $('#board').width();
+    const boardWidth = $('#wrapper').width();
     const cellWidthCalculated = Math.floor(boardWidth/colNumber);
     cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
     return cellDimension;
