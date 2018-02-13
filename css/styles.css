@@ -354,7 +354,7 @@ table {
 
   #forPrint img {
     display: block;
-    max-width: 0%;
+    max-width: 90%;
     margin: 1cm auto;
   }
 }
