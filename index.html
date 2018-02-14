@@ -12,8 +12,166 @@
     </div>
   </div>
   <div id="header" class="header"><h1>Pixel Art Maker 2.3.0</h1></div>
-  <div id="options" class="options"></div>
-  <div id="toolbar" class="toolbar sidebar"></div>
+  <div id="general" class="general">
+    <ul class="general-features">
+      <li class="tools">
+        <button
+          type="button"
+          id="new-canvas"
+          class="new-canvas toolButton tool"
+          title="New canvas">
+          <img src="img/icons/new.png" alt="New canvas">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="print"
+          class="print toolButton tool"
+          title="Print painting">
+          <img src="img/icons/print.png" alt="Print">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="save"
+          class="save toolButton tool"
+          title="Save painting as image">
+          <img src="img/icons/save.png" alt="Save">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="help"
+          class="help toolButton tool"
+          title="Help">
+          <img src="img/icons/help.png" alt="Help">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="undo"
+          class="undo toolButton"
+          title="Undo last action"
+          disabled>
+          <img src="img/icons/undo.png" alt="Undo">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="redo"
+          class="toolButton"
+          title="Redo last action"
+          disabled>
+          <img src="img/icons/redo.png" alt="Redo">
+        </button>
+      </li>
+      <li class="tools">
+        <form id="size-picker" class="size-picker">
+          <label for="input-height">H:</label>
+          <input type="number" id="input-height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100">
+          <label for="input-width">W:</label>
+          <input type="number" id="input-width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100">
+          <button
+            class="toolButton tool"
+            type="submit"
+            name="draw_grid"
+            id="draw_grid"
+            title="Draw grid">
+            <img src="img/icons/grid.png" alt="Draw">
+          </button>
+        </form>
+      </li>
+    </ul>
+  </div>
+  <div id="toolbar" class="toolbar sidebar">
+    <ul class="toolbar-features">
+      <li class="tools">
+        <button
+          type="button"
+          id="switch-borders"
+          class="switch-borders toolButton tool"
+          title="Hide borders">
+          <img src="img/icons/borders_off.png" alt="Hide borders">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="color-borders"
+          class="color-borders toolButton tool"
+          title="Color borders">
+          <img src="img/icons/borders_color.png" alt="Color borders">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="color-background"
+          class="color-background toolButton tool"
+          title="Color the background">
+          <img src="img/icons/canvas_color.png" alt="Color the background.">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="clean-background"
+          class="clean-background toolButton tool"
+          title="Clear the background">
+          <img src="img/icons/canvas_uncolor.png" alt="Clear the background.">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="fill"
+          class="fill toolButton tool"
+          title="Fill">
+          <img src="img/icons/fill.png" alt="Fill">
+        </button>
+      <li class="tools">
+        <button
+          type="button"
+          id="brush"
+          class="brush toolButton tool"
+          title="Brush">
+          <img src="img/icons/brush.png" alt="Brush">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="paint-cleaner"
+          class="paint-cleaner toolButton tool"
+          title="Clear painting">
+          <img src="img/icons/unbrush.png" alt="Clear painting">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="erase"
+          class="toolButton tool"
+          title="Erase brush">
+          <img src="img/icons/erase.png"  alt="Erase">
+        </button>
+      </li>
+      <li class="tools">
+        <button
+          type="button"
+          id="eyedropper"
+          class="eyedropper toolButton tool"
+          title="Choose colors with the eyedropper">
+          <img src="img/icons/eyedropper.png"  alt="Eyedropper">
+        </button>
+      </li>
+    </ul>
+  </div>
   <div id="colorbar" class="colorbar sidebar"></div>
   <div id="status"></div>
 </div>

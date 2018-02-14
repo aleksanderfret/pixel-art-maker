@@ -4,18 +4,17 @@ $(document).ready(pixelArtMaker);
  function pixelArtMaker() {
   // Gets DOM elements
   const pixelCanvas = $('#pixel-canvas');
-  const pixelCanvasInputHeight = $('#input_height');
-  const pixelCanvasInputWidth = $('#input_width');
-  const board = $('#wrapper');
+  const pixelCanvasInputHeight = $('#input-height');
+  const pixelCanvasInputWidth = $('#input-width');
+  const wrapper = $('#wrapper');
   const undo = $('#undo');
   const redo = $('#redo');
   const brushTool = $('#brush');
   const eraseTool = $('#erase');
   const eyedropperTool = $('#eyedropper');
-  const appLayout = $('#options, .toolbar, #wrapper');
-  const appLabels = $('.toolbar_label, .tool_label');
+  const appLayout = $('#general, .toolbar, #wrapper');
   const mainColorPicker = $('#main_color_picker');
-  const colorborders = $('#color_borders');
+  const colorborders = $('#color-borders');
   const bgColor = $('#bg-color');
   const bdColor = $('#bd-color');
   const brColor = $('#br-color');
@@ -65,7 +64,7 @@ $(document).ready(pixelArtMaker);
 
   //////////////////// NEW CANVAS FEATURE ////////////////////
   // Resets canvas to initial state
-  $('#new_canvas').on('click', function resetPainter() {
+  $('#new-canvas').on('click', function resetPainter() {
     backgroundColor = initialBackgroundColor;
     brushColor = initialBrushColor;
     borderColor = initialBorderColor;
@@ -97,7 +96,7 @@ $(document).ready(pixelArtMaker);
 
   //////////////////// SAVE FEATURE ////////////////////
   // Saves painting as png
-  $('#save_image').on('click', function saveImageHandler(event) {
+  $('#save').on('click', function saveImageHandler(event) {
     event.preventDefault();
     createTemporaryImage('save');
   });
@@ -121,7 +120,7 @@ $(document).ready(pixelArtMaker);
     const pixelCanvasCopy = createPixelCanvasCopy(correctedCellDimensionWidth, correctedCellDimensionHeight);
     const svgData = prepareSvgData(pixelCanvasCopy.prop('outerHTML'), correctedCanvasWidth, correctedCanvasHeight);
     const canvasContext = canvas.getContext('2d');
-    const saveLink = document.getElementById('save');
+    const saveLink = document.getElementById('save-link');
 
     const img = new Image();
     img.onload = function() {
@@ -359,7 +358,7 @@ $(document).ready(pixelArtMaker);
    * @return {number}
    */
   function calculateCellDimension(colNumber) {
-    const boardWidth = $('#wrapper').width();
+    const boardWidth = wrapper.width();
     const cellWidthCalculated = Math.floor(boardWidth/colNumber);
     cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
     return cellDimension;
@@ -444,7 +443,7 @@ $(document).ready(pixelArtMaker);
   });
 
    // Hides or shows cell borders
-   $('#borders_switcher').on('click', function cellBorderSwitchHandler() {
+   $('#switch-borders').on('click', function cellBorderSwitchHandler() {
     pixelCanvas.find('td').toggleClass('bordered_cells');
     if (displayBorders) {
       $(this).attr('title', 'Show borders.');
@@ -462,12 +461,12 @@ $(document).ready(pixelArtMaker);
 
   //////////////////// BACKGROUND COLOR FEATURES ////////////////////
   // Changes cell background color on fill button click
-  $('#color_background').on('click', function canvasBbackgroundColorChangeHandler() {
+  $('#color-background').on('click', function canvasBbackgroundColorChangeHandler() {
     cellBackgroundChanger(backgroundColor, mainColorPicker.val());
   });
 
   // Clean background color on button click
-  $('#clean_background').on('click', function cellBackgroundCleanHandler() {
+  $('#clean-background').on('click', function cellBackgroundCleanHandler() {
     cellBackgroundChanger(backgroundColor, initialBackgroundColor);
     mainColor = initialBackgroundColor;
   });
@@ -514,8 +513,8 @@ $(document).ready(pixelArtMaker);
   $('.tool').on('click', function onToolClickHandler(event) {
     // Stop current tool
     if (currentTool) {
-      board.removeClass(currentTool);
-      $('#'+currentTool).removeClass('active_tool');
+      wrapper.removeClass(currentTool + '-cursor');
+      $('#'+currentTool).removeClass('active-tool');
       toolToggles[currentTool](false);
     }
 
@@ -523,8 +522,8 @@ $(document).ready(pixelArtMaker);
     currentTool = $(event.currentTarget).attr('id');
     if (currentTool) {
       if (toolToggles[currentTool] !== undefined) {
-        board.addClass(currentTool);
-        $(this).addClass('active_tool');
+        wrapper.addClass(currentTool + '-cursor');
+        $(this).addClass('active-tool');
         toolToggles[currentTool](true);
       } else {
         currentTool = '';
@@ -655,7 +654,7 @@ $(document).ready(pixelArtMaker);
 
   //////////////////// BRUSH FEATURE ////////////////////
   // Clears painting
-  $('#paintCleaner').on('click', function cellBrushCleanHandler() {
+  $('#paint-cleaner').on('click', function cellBrushCleanHandler() {
     pixelCanvas.trigger('actionStart');
     pixelCanvas.find('td').each(function paintingCleaner(index, el) {
       if (rgb2hex($(el).css('background-color')) !== backgroundColor) {
