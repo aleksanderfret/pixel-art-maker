@@ -638,6 +638,7 @@ $(document).ready(pixelArtMaker);
    * @description finds immediate cell neighbors
    * @param {string} currentCell
    * @return {array}
+   * Source: inspired by https://alexandruvoica.github.io/
    */
   function findNeighbors(currentCell) {
     const xCoord = currentCell.attr('data-x');
@@ -781,6 +782,7 @@ $(document).ready(pixelArtMaker);
    * @description Converts rgb color to hex color
    * @param {string} rgb - rgb color
    * @return {string}
+   * Source: taken from https://jsfiddle.net/Mottie/xcqpF/1/light/
    */
   function rgb2hex(rgb) {
     const rgbValues = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
