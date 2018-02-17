@@ -2,11 +2,13 @@
 <html>
 <head>
     <title>Pixel Art Maker!</title>
+    <link rel="stylesheet" href="vendor/malihuCustomScrollbar/jquery.mCustomScrollbar.min.css" media="all"/>
     <link rel="stylesheet" href="css/styles.css">
+
 </head>
 <body>
 <div id="painter" class="painter">
-  <div id="wrapper" class="wrapper" oncontextmenu="return false">
+  <div id="artboard-wrapper" class="artboard-wrapper" oncontextmenu="return false">
     <div id="artboard" class="artboard">
       <table id="pixel-canvas" class="pixel-canvas"></table>
     </div>
@@ -22,8 +24,8 @@
           title="New canvas">
           <img src="img/icons/new.png" alt="New canvas">
         </button>
-      </li>
-      <li class="tools">
+      </li><!--
+   --><li class="tools">
         <button
           type="button"
           id="print"
@@ -31,8 +33,8 @@
           title="Print painting">
           <img src="img/icons/print.png" alt="Print">
         </button>
-      </li>
-      <li class="tools">
+      </li><!--
+   --><li class="tools">
         <button
           type="button"
           id="save"
@@ -40,8 +42,8 @@
           title="Save painting as image">
           <img src="img/icons/save.png" alt="Save">
         </button>
-      </li>
-      <li class="tools">
+      </li><!--
+   --><li class="tools">
         <button
           type="button"
           id="help"
@@ -49,8 +51,8 @@
           title="Help">
           <img src="img/icons/help.png" alt="Help">
         </button>
-      </li>
-      <li class="tools">
+      </li><!--
+   --><li class="tools">
         <button
           type="button"
           id="undo"
@@ -59,8 +61,8 @@
           disabled>
           <img src="img/icons/undo.png" alt="Undo">
         </button>
-      </li>
-      <li class="tools">
+      </li><!--
+   --><li class="tools">
         <button
           type="button"
           id="redo"
@@ -69,18 +71,18 @@
           disabled>
           <img src="img/icons/redo.png" alt="Redo">
         </button>
-      </li>
-      <li class="tools">
+      </li></li><!--
+   --><li class="tools">
         <form id="size-picker" class="size-picker">
           <label for="input-height">H:</label>
-          <input type="number" id="input-height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100">
+          <input type="number" id="input-height" class="input-height" name="height" min="1" max="100" value="10" title="Enter the number of rows. Maximum 100">
           <label for="input-width">W:</label>
-          <input type="number" id="input-width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100">
+          <input type="number" id="input-width" class="input-width" name="width" min="1" max="100" value="10" title="Enter the number of columns. Maximum 100">
           <button
-            class="toolButton tool"
             type="submit"
-            name="draw_grid"
-            id="draw_grid"
+            name="draw-grid"
+            id="draw-grid"
+            class="draw-grid toolButton tool"
             title="Draw grid">
             <img src="img/icons/grid.png" alt="Draw">
           </button>
@@ -172,10 +174,64 @@
       </li>
     </ul>
   </div>
-  <div id="colorbar" class="colorbar sidebar"></div>
-  <div id="status"></div>
+  <div id="colorbar" class="colorbar sidebar">
+    <ul class="colorbar-features">
+      <li class="tools">
+        <div class="toolButton">
+          <input type="color" class="color-picker" id="color-picker" title="Set color">
+        </div>
+      </li>
+      <li class="tools">
+        <ul id="swatches" class="swatches">
+          <li id="pink" class="swatch pink" title="Pink"></li>
+          <li id="purple" class="swatch purple" title="Purple"></li>
+          <li id="violet" class="swatch violet" title="Violet"></li>
+          <li id="dark-blue" class="swatch dark-blue" title="Dark blue"></li>
+          <li id="blue" class="swatch blue" title="Blue"></li>
+          <li id="light-blue" class="swatch light-blue" title="Light blue"></li>
+          <li id="turquoise" class="swatch turquoise" title="Turquoise"></li>
+          <li id="sea-green" class="swatch sea-green" title="Sea green"></li>
+          <li id="dark-green" class="swatch dark-green" title="Dark green"></li>
+          <li id="green" class="swatch green" title="Green"></li>
+          <li id="lime" class="swatch lime" title="Lime"></li>
+          <li id="yellow" class="swatch yellow" title="Yellow"></li>
+          <li id="gold" class="swatch gold" title="Gold"></li>
+          <li id="orange" class="swatch orange" title="Orange"></li>
+          <li id="dark-orange" class="swatch dark-orange" title="Dark orange"></li>
+          <li id="red" class="swatch red" title="Red"></li>
+          <li id="brown" class="swatch brown" title="Brown"></li>
+          <li id="black" class="swatch black" title="Black"></li>
+          <li id="gray" class="swatch gray" title="Gray"></li>
+          <li id="white" class="swatch white" title="White"></li>
+        </ul>
+  </div>
+  <div id="status" class="status">
+    <ul class="status-features">
+      <li id="position" class="position status-info">
+        <div class="status-label">position:</div>
+        <div id="coordinates" class="coordinates">none</div>
+      </li>
+      <li id="colors" class="colors status-info">
+        <div class="status-label">colors:</div>
+        <ul id="markers" class="markers">
+          <li><span id="br-color" class="status-color-box br-color"></span><span>Brush</span></li>
+          <li><span id="bg-color" class="status-color-box bg-color"></span><span>Background</span></li>
+          <li><span id="bd-color" class="status-color-box bd-color"></span><span>Borders</span></li>
+        </ul>
+      </li>
+      <li id="author" class="author status-info">
+        <div class="status-label">made by:</div>
+        <div>Aleksander Fret on the Google Challenge Scholarship.</div>
+      </li>
+    </ul>
+  </div>
 </div>
+<div id="forPrint" class="forPrint"></div>
+<a href="#" id="save-link" class="save-link" download="pixel-art_maker.png"></a>
+<!-- jQuery direct from google's CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- jQuery custom content scroller from http://manos.malihu.gr/jquery-custom-content-scroller/ -->
+<script src="vendor/malihuCustomScrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="js/designs.js"></script>
 </body>
 </html>

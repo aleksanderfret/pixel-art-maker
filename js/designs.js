@@ -1,19 +1,19 @@
 $(document).ready(pixelArtMaker);
 
-
- function pixelArtMaker() {
+function pixelArtMaker() {
   // Gets DOM elements
   const pixelCanvas = $('#pixel-canvas');
   const pixelCanvasInputHeight = $('#input-height');
   const pixelCanvasInputWidth = $('#input-width');
-  const wrapper = $('#wrapper');
+  const wrapper = $('#artboard-wrapper');
+  const artboard = $('#artboard');
   const undo = $('#undo');
   const redo = $('#redo');
   const brushTool = $('#brush');
   const eraseTool = $('#erase');
   const eyedropperTool = $('#eyedropper');
-  const appLayout = $('#general, .toolbar, #wrapper');
-  const mainColorPicker = $('#main_color_picker');
+  const appLayout = $('#general, .toolbar, #artboard-wrapper');
+  const mainColorPicker = $('#color-picker');
   const colorborders = $('#color-borders');
   const bgColor = $('#bg-color');
   const bdColor = $('#bd-color');
@@ -23,8 +23,8 @@ $(document).ready(pixelArtMaker);
   const initialBrushColor = mainColorPicker.val();
   const initialBackgroundColor = '#ffffff';
   const initialBorderColor = '#d3d3d3';
-  const initialColsNumber = 10;//pixelCanvasInputWidth.val();
-  const initialRowsNumber = 10;//pixelCanvasInputHeight.val();
+  const initialColsNumber = pixelCanvasInputWidth.val();
+  const initialRowsNumber = pixelCanvasInputHeight.val();
   const initialCellDimension = 20;
   const initialColor = mainColorPicker.val();
 
@@ -76,6 +76,7 @@ $(document).ready(pixelArtMaker);
     mainColorPicker[0].value = mainColor;
     pixelCanvasInputHeight.val(rowsNumber);
     pixelCanvasInputWidth.val(colsNumber);
+
     makeGrid(rowsNumber, colsNumber);
     resetActionsHistory();
     bgColor.css('background-color', backgroundColor);
@@ -398,15 +399,19 @@ $(document).ready(pixelArtMaker);
       grid += '</tr>';
     }
     pixelCanvas.html(grid);
-    pixelCanvas.find('td').addClass('bordered_cells').css({
+    pixelCanvas.find('td').addClass('bordered-cells').css({
       'border-color': borderColor,
       'background-color': backgroundColor
     });
-    setCellSize(pixelCanvas, calculateCellDimension(width));
+
+    artboard.mCustomScrollbar('destroy');
+    turnOnScrollbars();
+    centerVerticallyOrScrollbarY();
+    //setCellSize(pixelCanvas, calculateCellDimension(width));
   }
 
   // Ensures that height and width will match the min and max attributes
-  $('#input_width, #input_height').on('blur', function dimensionValidatorHandler() {
+  $('#input-width, #input-height').on('blur', function dimensionValidatorHandler() {
     const min = Number($(this).attr('min'));
     const max = Number($(this).attr('max'));
 
@@ -419,7 +424,7 @@ $(document).ready(pixelArtMaker);
   });
 
   // Creates the grid based on entered values, when grid size is submitted
-  $('#draw_grid').on('click', function setDimensionsHandler(event) {
+  $('#draw-grid').on('click', function setDimensionsHandler(event) {
     event.preventDefault();
     colsNumber = pixelCanvasInputWidth.val();
     rowsNumber = pixelCanvasInputHeight.val();
@@ -427,10 +432,34 @@ $(document).ready(pixelArtMaker);
     makeGrid(rowsNumber, colsNumber);
   });
 
+  /**
+   * @description Centers canvas vertically
+   */
+  function centerVerticallyOrScrollbarY() {
+    const artboardHeight = artboard.height();
+    const canvasHeight = pixelCanvas.height();
+    //debugger;
+    if (artboardHeight > canvasHeight ) {
+      $('.mCSB_container').addClass('vertical-aligner');
+    } else {
+      $('.mCSB_container').removeClass('vertical-aligner');
+    }
+  }
+
+  // Aligns canvas vertically on window resize event
+  $(window).on('resize', function() {
+    centerVerticallyOrScrollbarY();
+  });
+
+  // Aligns canvas vertically on canvas resize event
+  pixelCanvas.on('resize', function() {
+    centerVerticallyOrScrollbarY();
+  });
+
   // Sets cell size when window size changed
-  $(window).on('resize', function cellSizeChangeHandler() {
-    setCellSize(pixelCanvas, calculateCellDimension(colsNumber));
-  })
+  // $(window).on('resize', function cellSizeChangeHandler() {
+  //   setCellSize(pixelCanvas, calculateCellDimension(colsNumber));
+  // })
 
 
 
@@ -444,15 +473,13 @@ $(document).ready(pixelArtMaker);
 
    // Hides or shows cell borders
    $('#switch-borders').on('click', function cellBorderSwitchHandler() {
-    pixelCanvas.find('td').toggleClass('bordered_cells');
+    pixelCanvas.find('td').toggleClass('bordered-cells');
     if (displayBorders) {
       $(this).attr('title', 'Show borders.');
       $(this).find('img').attr('src', 'img/icons/borders_on.png');
-      $(this).siblings().text('on');
     } else {
       $(this).attr('title', 'Hide borders.');
       $(this).find('img').attr('src', 'img/icons/borders_off.png');
-      $(this).siblings().text('off');
     }
     displayBorders = !displayBorders;
   });
@@ -777,6 +804,16 @@ $(document).ready(pixelArtMaker);
 
 
 
+  //////////////////// STATUS BAR FEATURES ////////////////////
+  // Displays hoovered cell position
+  pixelCanvas.on('mouseover', 'td', function getCellPosition() {
+    const xCoord = $(this).attr('data-x');
+    const yCoord = $(this).attr('data-y');
+    $('#coordinates').html('X: ' + xCoord + ' Y: ' + yCoord);
+  });
+
+
+
   //////////////////// HELPERS ////////////////////
   /**
    * @description Converts rgb color to hex color
@@ -792,17 +829,22 @@ $(document).ready(pixelArtMaker);
       ('0' + parseInt(rgbValues[3], 10).toString(16)).slice(-2) : '';
   }
 
-  pixelCanvas.on('mouseover', 'td', function getCellPosition() {
-    const xCoord = $(this).attr('data-x');
-    const yCoord = $(this).attr('data-y');
-    $('#coordinates').html('X: ' + xCoord + ' Y: ' + yCoord);
-  });
-
+  /**
+   * @description Turns on custom scrollbars
+   * Source: jQuery custom content scroller from http://manos.malihu.gr/jquery-custom-content-scroller/
+   */
+  function turnOnScrollbars(){
+    artboard.mCustomScrollbar({
+      axis:'xy',
+      theme: 'light-3',
+      scrollbarPosition: 'outside'
+    });
+  }
 }
-
+// TODO vertical align
+// TODO fix fill recursive overstacking
 // TODO wand (the same tool)
 // TODO wand (all the same tool)
 // TODO colors history
 // TODO change table, tr, td to divs
 // TODO RWD
-// TODO fix firefox board size
