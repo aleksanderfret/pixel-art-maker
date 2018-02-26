@@ -1,4 +1,5 @@
-/img/
+!/img/
+/img/*
 /js/vendor/
 /nbproject/
 /.idea/
@@ -6,3 +7,4 @@
 redwoods_state_park.jpg
 !/vendor
 /vendor/*
+/images/
