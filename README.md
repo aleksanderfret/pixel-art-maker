@@ -19,6 +19,7 @@ This graphic application was created as a project within the Google Scholarship 
 - Brush and Erase previews disappear
 
 ## Contribution
+This project was #madewithudacity and #googleudacityscholars. Thank you.
 
 ## License
 The MIT License (MIT)
