@@ -841,7 +841,7 @@ function pixelArtMaker() {
     });
   }
 }
-// TODO vertical align
+
 // TODO fix fill recursive overstacking
 // TODO wand (the same tool)
 // TODO wand (all the same tool)

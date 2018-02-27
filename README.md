@@ -1,16 +1,24 @@
-# Pixel Art Maker Project
+# Pixel Art Maker
+This graphic application was created as a project within the Google Scholarship Programm. It provides various functionalities to draw on grid-based canvas. Used technologies: html, css, js, jQuery.
 
-## Table of Contents
+## Dependecies
+- [jQuery](http://jquery.com/)
+- [jQuery custom content scroller](http://manos.malihu.gr/jquery-custom-content-scroller/)
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+## ToDo
+- Help feature (contac, about me)
+- Drawing geometric shapes
+- Replace png icons with svg
+- Fix fill recursive overstacking
+- Colors history
+- Improve RWD
+- Convert project to ES6
 
-## Instructions
+## Known issue
+- fill recursive overstacking
+- Brush and Erase previews disappear
 
-To get started, open `designs.js` and start building out the app's functionality.
+## Contribution
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+## License
+The MIT License (MIT)
