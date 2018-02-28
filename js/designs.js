@@ -632,31 +632,33 @@ function pixelArtMaker() {
    * @return {array}
    */
    function findCells(cell) {
-    const currentCell = $(cell);
-    const currentBackgroundColor = currentCell.css('background-color');
+    // in some places jQuery object is needed
+    const cellJQ = $(cell);
+    const currentBackgroundColor = cellJQ.css('background-color');
     const checkedCells = [];
     const finalArea = [];
+    const cellToCheckNeighbors = [];
 
     function findNewSameColoredCell(currentCell) {
-      const lastAddedCells = [];
-      const neighbors = findNeighbors(currentCell);
+      const neighbors = findNeighbors(currentCell, checkedCells);
       neighbors.forEach(function addSameNeighbors(neighbor, index) {
-        if (!(checkedCells.includes(neighbor[0]))) {
+        if (!(checkedCells.includes(neighbor.attr('id')))) {
           if (neighbor.css('background-color') === currentBackgroundColor) {
-            lastAddedCells.push(neighbor);
+            cellToCheckNeighbors.push(neighbor);
             finalArea.push(neighbor[0]);
           }
-          checkedCells.push(neighbor[0]);
+          checkedCells.push(neighbor.attr('id'));
         }
-        lastAddedCells.forEach(function findSameForLastAddedCells(lastAddedCell, index){
-          findNewSameColoredCell(lastAddedCell);
-        });
       });
     }
 
     finalArea.push(cell);
-    checkedCells.push(cell);
-    findNewSameColoredCell(currentCell);
+    checkedCells.push(cellJQ.attr('id'));
+    cellToCheckNeighbors.push(cellJQ);
+    while (cellToCheckNeighbors.length > 0) {
+      const tempCell = cellToCheckNeighbors.pop();
+      findNewSameColoredCell(tempCell);
+    }
 
     return finalArea;
   }
@@ -665,16 +667,24 @@ function pixelArtMaker() {
    * @description finds immediate cell neighbors
    * @param {string} currentCell
    * @return {array}
-   * Source: inspired by https://alexandruvoica.github.io/
    */
-  function findNeighbors(currentCell) {
-    const xCoord = currentCell.attr('data-x');
-    const yCoord = currentCell.attr('data-y');
+  function findNeighbors(currentCell, checkedCells) {
+    const xCoord = Number(currentCell.attr('data-x'));
+    const yCoord = Number(currentCell.attr('data-y'));
     const neighbors = [];
-    neighbors[0] = currentCell.parent('tr').prev('tr').children('td').eq(xCoord-1);
-    neighbors[1] = currentCell.next('td');
-    neighbors[2] = currentCell.parent('tr').next('tr').children('td').eq(xCoord-1);
-    neighbors[3] = currentCell.prev('td');
+
+    if(!checkedCells.includes('y'+(yCoord-1)+'x'+xCoord)) {
+      neighbors.push(currentCell.parent().prev().children().eq(xCoord-1));
+    }
+    if(!checkedCells.includes('y'+yCoord+'x'+(xCoord+1))) {
+      neighbors.push(currentCell.next());
+    }
+    if(!checkedCells.includes('y'+(yCoord+1)+'x'+xCoord)) {
+      neighbors.push(currentCell.parent().next().children().eq(xCoord-1));
+    }
+    if(!checkedCells.includes('y'+yCoord+'x'+(xCoord-1))) {
+      neighbors.push(currentCell.prev());
+    }
     return neighbors;
   }
 
