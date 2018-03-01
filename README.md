@@ -14,7 +14,6 @@ This graphic application was created as a project within the Google Scholarship 
 - Convert project to ES6
 
 ## Known issue
-- fill recursive overstacking
 - Brush and Erase previews disappear
 
 ## Contribution
