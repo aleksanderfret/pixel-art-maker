@@ -4,6 +4,7 @@
     <title>Pixel Art Maker!</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="vendor/malihuCustomScrollbar/jquery.mCustomScrollbar.min.css" media="all"/>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -23,7 +24,7 @@
           id="new-canvas"
           class="new-canvas toolButton tool"
           title="New canvas">
-          <img src="img/icons/new.png" alt="New canvas">
+          <img src="img/icons/new.svg" alt="New canvas">
         </button>
       </li><!--
    --><li class="tools">
@@ -32,7 +33,7 @@
           id="print"
           class="print toolButton tool"
           title="Print painting">
-          <img src="img/icons/print.png" alt="Print">
+          <img src="img/icons/print.svg" alt="Print">
         </button>
       </li><!--
    --><li class="tools">
@@ -41,7 +42,7 @@
           id="save"
           class="save toolButton tool"
           title="Save painting as image">
-          <img src="img/icons/save.png" alt="Save">
+          <img src="img/icons/save.svg" alt="Save">
         </button>
       </li><!--
    --><li class="tools">
@@ -49,8 +50,8 @@
           type="button"
           id="help"
           class="help toolButton tool"
-          title="Help">
-          <img src="img/icons/help.png" alt="Help">
+          title="Show manual">
+          <img src="img/icons/help.svg" alt="Help">
         </button>
       </li><!--
    --><li class="tools">
@@ -60,7 +61,7 @@
           class="undo toolButton"
           title="Undo last action"
           disabled>
-          <img src="img/icons/undo.png" alt="Undo">
+          <img src="img/icons/undo.svg" alt="Undo">
         </button>
       </li><!--
    --><li class="tools">
@@ -70,7 +71,7 @@
           class="toolButton"
           title="Redo last action"
           disabled>
-          <img src="img/icons/redo.png" alt="Redo">
+          <img src="img/icons/redo.svg" alt="Redo">
         </button>
       </li></li><!--
    --><li class="tools">
@@ -85,7 +86,7 @@
             id="draw-grid"
             class="draw-grid toolButton tool"
             title="Draw grid">
-            <img src="img/icons/grid.png" alt="Draw">
+            <img src="img/icons/grid.svg" alt="Draw grid">
           </button>
         </form>
       </li>
@@ -99,7 +100,7 @@
           id="switch-borders"
           class="switch-borders toolButton tool"
           title="Hide borders">
-          <img src="img/icons/borders_off.png" alt="Hide borders">
+          <img src="img/icons/borders_off.svg" alt="Hide borders">
         </button>
       </li>
       <li class="tools">
@@ -108,7 +109,7 @@
           id="color-borders"
           class="color-borders toolButton tool"
           title="Color borders">
-          <img src="img/icons/borders_color.png" alt="Color borders">
+          <img src="img/icons/borders_color.svg" alt="Color borders">
         </button>
       </li>
       <li class="tools">
@@ -117,7 +118,7 @@
           id="color-background"
           class="color-background toolButton tool"
           title="Color the background">
-          <img src="img/icons/canvas_color.png" alt="Color the background.">
+          <img src="img/icons/canvas_color.svg" alt="Color the background">
         </button>
       </li>
       <li class="tools">
@@ -126,7 +127,7 @@
           id="clean-background"
           class="clean-background toolButton tool"
           title="Clear the background">
-          <img src="img/icons/canvas_uncolor.png" alt="Clear the background.">
+          <img src="img/icons/canvas_uncolor.svg" alt="Clear the background">
         </button>
       </li>
       <li class="tools">
@@ -135,7 +136,7 @@
           id="fill"
           class="fill toolButton tool"
           title="Fill">
-          <img src="img/icons/fill.png" alt="Fill">
+          <img src="img/icons/fill.svg" alt="Fill">
         </button>
       <li class="tools">
         <button
@@ -143,7 +144,7 @@
           id="brush"
           class="brush toolButton tool"
           title="Brush">
-          <img src="img/icons/brush.png" alt="Brush">
+          <img src="img/icons/brush.svg" alt="Brush">
         </button>
       </li>
       <li class="tools">
@@ -152,7 +153,7 @@
           id="paint-cleaner"
           class="paint-cleaner toolButton tool"
           title="Clear painting">
-          <img src="img/icons/unbrush.png" alt="Clear painting">
+          <img src="img/icons/unbrush.svg" alt="Clear painting">
         </button>
       </li>
       <li class="tools">
@@ -161,7 +162,7 @@
           id="erase"
           class="toolButton tool"
           title="Erase brush">
-          <img src="img/icons/erase.png"  alt="Erase">
+          <img src="img/icons/erase.svg"  alt="Erase">
         </button>
       </li>
       <li class="tools">
@@ -170,7 +171,7 @@
           id="eyedropper"
           class="eyedropper toolButton tool"
           title="Choose colors with the eyedropper">
-          <img src="img/icons/eyedropper.png"  alt="Eyedropper">
+          <img src="img/icons/eyedropper.svg"  alt="Eyedropper">
         </button>
       </li>
     </ul>
@@ -225,6 +226,82 @@
         <div>Aleksander Fret <span class="course">on the Google Challenge Scholarship</span></div>
       </li>
     </ul>
+  </div>
+</div>
+<div id="helpModal" class="helpModal">
+  <div id="helpContent" class="helpContent">
+    <h2 class="helpHeader">Pixel Art Maker Manual</h2>
+    <ul class="toolList">
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/new.svg" alt="New canvas"></span>
+        <span class="toolDescription">Create new canvas.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/save.svg" alt="Save"></span>
+        <span class="toolDescription">Print painting.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/print.svg" alt="Print"></span>
+        <span class="toolDescription">Save painting as a png.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/help.svg" alt="Help"></span>
+        <span class="toolDescription">Display manual.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/undo.svg" alt="Undo"></span>
+        <span class="toolDescription">Undo last action.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/redo.svg" alt="Redo"></span>
+        <span class="toolDescription">Redo last action.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/grid.svg" alt="Draw grid"></span>
+        <span class="toolDescription">Draw canvas grid.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/borders_off.svg" alt="Hide borders"></span>
+        <span class="toolDescription">Hide cell borders.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/borders_on.svg" alt="Show borders"></span>
+        <span class="toolDescription">Show cell borders.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/borders_color.svg" alt="Color borders"></span>
+        <span class="toolDescription">Color cell borders</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/canvas_color.svg" alt="Color the background"></span>
+        <span class="toolDescription">Color the background.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/canvas_uncolor.svg" alt="Clear the background"></span>
+        <span class="toolDescription">Clear the background.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/fill.svg" alt="Fill"></span>
+        <span class="toolDescription">Fill area.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/brush.svg" alt="Brush"></span>
+        <span class="toolDescription">Brush.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/unbrush.svg" alt="Clear painting"></span>
+        <span class="toolDescription">Clear painting.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/erase.svg" alt="Erase"></span>
+        <span class="toolDescription">Erase.</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage"><img src="img/icons/eyedropper.svg" alt="Eyedropper"></span>
+        <span class="toolDescription">Choose color.</span>
+      </li>
+    </ul>
+    <button id="closeModal" class="closeModal"><i class="far fa-window-close closeIcon"></i></button>
   </div>
 </div>
 <!-- <div id="help-box" class="help-box"></div> -->

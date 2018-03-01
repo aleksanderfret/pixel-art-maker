@@ -6,9 +6,7 @@ This graphic application was created as a project within the Google Scholarship 
 - [jQuery custom content scroller](http://manos.malihu.gr/jquery-custom-content-scroller/)
 
 ## ToDo
-- Help feature (contac, about me)
 - Drawing geometric shapes
-- Replace png icons with svg
 - Colors history
 - Improve RWD
 - Convert project to ES6

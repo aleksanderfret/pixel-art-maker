@@ -195,18 +195,14 @@ function pixelArtMaker() {
 
 
   //////////////////// HELP FEATURES ////////////////////
-  // Toggle toolbar labels
-  $('#help').on('click', function toggleToolbarLabels(){
-    if(!dispalyLabels) {
-      $(this).addClass('active_tool ');
-      appLabels.addClass('show_labels');
-      appLayout.addClass('labelsShowed');
-    } else {
-      $(this).removeClass('active_tool ');
-      appLabels.removeClass('show_labels');
-      appLayout.removeClass('labelsShowed');
-    }
-    dispalyLabels = !dispalyLabels;
+  // Show help Modal
+  $('#help').on('click', function showHelpModal() {
+    $('#helpModal').addClass('showModal');
+  });
+
+  // Hide help Modal
+  $('#closeModal').on('click', function hideHelpModal() {
+    $('#helpModal').removeClass('showModal');
   });
 
 
