@@ -472,10 +472,10 @@ function pixelArtMaker() {
     pixelCanvas.find('td').toggleClass('bordered-cells');
     if (displayBorders) {
       $(this).attr('title', 'Show borders.');
-      $(this).find('img').attr('src', 'img/icons/borders_on.png');
+      $(this).find('img').attr('src', 'img/icons/borders_on.svg');
     } else {
       $(this).attr('title', 'Hide borders.');
-      $(this).find('img').attr('src', 'img/icons/borders_off.png');
+      $(this).find('img').attr('src', 'img/icons/borders_off.svg');
     }
     displayBorders = !displayBorders;
   });
