@@ -54,7 +54,8 @@ function pixelArtMaker() {
     brush: toggleBrushTool,
     erase: toggleEraseTool,
     eyedropper: toggleEyedropperTool,
-    fill: toggleFillTool
+    fill: toggleFillTool,
+    line: toggleLineTool
   }
 
   // Draws initial grid
@@ -590,7 +591,7 @@ function pixelArtMaker() {
     $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
       event.preventDefault();
       pixelCanvas.off('mouseover', 'td', paintHandler);
-      $(event.target).trigger('actionStop',['brush']);
+      pixelCanvas.trigger('actionStop',['brush']);
     });
   }
 
@@ -619,7 +620,7 @@ function pixelArtMaker() {
       $(cell).trigger('register', [newColor]);
       cellPainter(cell, newColor);
     });
-    $(event.target).trigger('actionStop');
+    pixelCanvas.trigger('actionStop');
   }
 
   /**
@@ -784,6 +785,128 @@ function pixelArtMaker() {
         'opacity': opacity
       });
     }
+  }
+
+
+
+  //////////////////// GEOMETRIC SHAPES FEATURE ////////////////////
+  /**
+   * @description Toggles line tool
+   * @param {boolean} toolState
+   */
+  function toggleLineTool(toolState) {
+    const toggleMethod = (toolState) ? 'on' : 'off';
+    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingLineHandler);
+  }
+
+  /**
+   * @description starts drawing line
+   * @param {object} event
+   */
+  function startDrawingLineHandler(event) {
+    event.preventDefault();
+    $(event.target).trigger('actionStart');
+    const newColor = mainColor;
+    const startCell = $(event.target);
+    const cellMemory = [];
+
+    pixelCanvas.on('mouseenter', 'td', drawLineHandler);
+
+    /**
+     * @description draws line and show line preview
+     * @param {object} event
+     */
+    function drawLineHandler(event){
+      event.preventDefault();
+
+      if(cellMemory.length>0){
+        cellMemory.forEach(function(cell, index){
+          cellPainter(cell.cell, cell.oldBackground);
+        });
+        cellMemory.length = 0;
+      }
+
+      const cells = determineLine(startCell, $(this));
+      cells.forEach(function (cell, index) {
+        const cellData = {
+          cell: cell,
+          oldBackground: cell.css('background-color'),
+        };
+        cellMemory.push(cellData);
+        cellPainter(cell, newColor);
+      });
+    }
+
+    // Stops drawing line on mouseup event
+    $('body').one('mouseup', function stopDrawingLineHandler(event) {
+      event.preventDefault();
+      cellMemory.forEach(function(cell){
+        // Registering mechanism saves cell background as old color
+        // so here is temporary reverting of old background for registering feature
+        cellPainter(cell.cell, cell.oldBackground);
+        cell.cell.trigger('register', [newColor]);
+        cellPainter(cell.cell, newColor);
+      });
+      pixelCanvas.off('mouseenter', 'td', drawLineHandler);
+      pixelCanvas.trigger('actionStop',['line']);
+    });
+  }
+
+  /**
+   * @description determines cells to draw a line (Bresenham algorithm)
+   * @param {object} startCell
+   * @param {object} endCell
+   */
+  function determineLine(startCell, endCell) {
+    const cellArray = [];
+    let x1 = Number(startCell.attr('data-x'));
+    let y1 = Number(startCell.attr('data-y'));
+    const x2 = Number(endCell.attr('data-x'));
+    const y2 = Number(endCell.attr('data-y'));
+    const deltaX = Math.abs(x1-x2);
+    const deltaY = Math.abs(y1-y2);
+    const stepX = (x1 < x2) ? 1 : -1;
+    const stepY = (y1 < y2) ? 1 : -1;
+    let error;
+
+    cellArray.push(startCell);
+
+    if (deltaX <= deltaY) {
+      error = deltaY/2;
+      for (let i=0; i<deltaY; i++) {
+        y1 += stepY;
+        error -= deltaX;
+        if (error < 0) {
+          x1 += stepX;
+          error += deltaY;
+        }
+        cellArray.push(cellFromCoords(x1, y1));
+      }
+
+    } else {
+      error = deltaX/2;
+      for (let i=0; i<deltaX; i++) {
+        x1 += stepX;
+        error -= deltaY;
+        if (error < 0) {
+          y1 += stepY;
+          error += deltaX;
+        }
+        cellArray.push(cellFromCoords(x1, y1));
+      }
+    }
+
+    return cellArray;
+  }
+
+  /**
+   * @description Finds cell from coordinates
+   * @param {number} x
+   * @param {number} y
+   */
+  function cellFromCoords(x, y) {
+    const cell = pixelCanvas.find('td[data-x="' + x + '"][data-y="' + y + '"]');
+    return cell;
   }
 
 

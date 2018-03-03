@@ -6,9 +6,12 @@ This graphic application was created as a project within the Google Scholarship 
 - [jQuery custom content scroller](http://manos.malihu.gr/jquery-custom-content-scroller/)
 
 ## ToDo
-- Drawing geometric shapes
+- Drawing circles
+- Drawing rectangles
 - Colors history
-- Improve RWD
+- Changing brush size
+- Changing cell size
+- Refactoring of cell painting mechanism to better fit for all tools
 - Convert project to ES6
 
 ## Known issue
