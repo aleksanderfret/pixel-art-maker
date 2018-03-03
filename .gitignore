@@ -1,8 +1,3 @@
-!/img
-!/img/cursors
-/img/cursors/*
-!/img/icons
-/img/icons/*
 /nbproject/
 /.idea/
 /learn/
