@@ -74,9 +74,10 @@ function pixelArtMaker() {
     brushColor = initialBrushColor;
     borderColor = initialBorderColor;
     mainColor = initialColor;
-    displayBorders = true;
     colsNumber = initialColsNumber;
     rowsNumber = initialRowsNumber;
+    displayBorders = true;
+    $('#switch-borders').find('img').attr('src', 'img/icons/borders_off.svg');
 
     mainColorPicker[0].value = mainColor;
     pixelCanvasInputHeight.val(rowsNumber);
