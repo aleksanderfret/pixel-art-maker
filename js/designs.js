@@ -56,7 +56,7 @@ function pixelArtMaker() {
     fill: toggleFillTool,
     line: toggleLineTool,
     circle: toggleCircleTool,
-    //rectangle: toggleRectangleTool
+    rectangle: toggleRectangleTool
   }
 
   // ALl cells collection
@@ -1044,6 +1044,27 @@ function pixelArtMaker() {
     });
     return uniqueJqArray;
   }
+
+
+
+   //////////////////// RECTANGLE FEATURE ////////////////////
+  /**
+   * @description Toggles rectangle tool
+   * @param {boolean} toolState
+   */
+  function toggleRectangleTool(toolState) {
+    const toggleMethod = (toolState) ? 'on' : 'off';
+    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingRectangleHandler);
+  }
+
+  /**
+   * @description starts drawing rectangle
+   * @param {object} event
+   */
+  function startDrawingRectangleHandler(event) {
+    console.log('rectangle');
+  }
+
 
 
   //////////////////// EYEDROPPER FEATURE ////////////////////

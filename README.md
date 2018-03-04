@@ -10,9 +10,9 @@ This graphic application was created as a project within the Google Scholarship 
 
 ## ToDo
 - Drawing rectangles
-- Colors history
 - Changing brush size
 - Changing cell size
+- Colors history
 - Refactoring of cell painting mechanism to better fit for all tools
 - Convert project to ES6
 
