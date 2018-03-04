@@ -124,6 +124,7 @@ h1 {
 
 /* ############### PIXEL CANVAS ############### */
 .pixel-canvas {
+  background-color: #fff;
   vertical-align: middle;
   display: inline-block;
   border-collapse: collapse;
