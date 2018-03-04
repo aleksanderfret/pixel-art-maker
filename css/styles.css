@@ -438,6 +438,18 @@ label {
   cursor: url('../img/cursors/fill_cursor.png') 0 25, default;
 }
 
+.line-cursor {
+  cursor: url('../img/cursors/line_cursor.png') 10 10, default;
+}
+
+.circle-cursor {
+  cursor: url('../img/cursors/circle_cursor.png') 10 10, default;
+}
+
+.rectangle-cursor {
+  cursor: url('../img/cursors/rectangle_cursor.png') 10 10, default;
+}
+
 
 
 /* ############### STATUSBAR PANEL ############### */

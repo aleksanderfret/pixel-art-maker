@@ -54,7 +54,9 @@ function pixelArtMaker() {
     erase: toggleEraseTool,
     eyedropper: toggleEyedropperTool,
     fill: toggleFillTool,
-    line: toggleLineTool
+    line: toggleLineTool,
+    circle: toggleCircleTool,
+    //rectangle: toggleRectangleTool
   }
 
   // ALl cells collection
@@ -798,7 +800,7 @@ function pixelArtMaker() {
 
 
 
-  //////////////////// GEOMETRIC SHAPES FEATURE ////////////////////
+  //////////////////// LINE FEATURE ////////////////////
   /**
    * @description Toggles line tool
    * @param {boolean} toolState
@@ -876,7 +878,7 @@ function pixelArtMaker() {
     const deltaY = Math.abs(y1-y2);
     const stepX = (x1 < x2) ? 1 : -1;
     const stepY = (y1 < y2) ? 1 : -1;
-    let error;
+    let error; //decision parameter
 
     cellArray.push(startCell);
 
@@ -917,6 +919,68 @@ function pixelArtMaker() {
     const cell = pixelCanvas.find('td[data-x="' + x + '"][data-y="' + y + '"]');
     return cell;
   }
+
+
+
+  //////////////////// CIRCLE FEATURE ////////////////////
+  /**
+   * @description Toggles circle tool
+   * @param {boolean} toolState
+   */
+  function toggleCircleTool(toolState) {
+    const toggleMethod = (toolState) ? 'on' : 'off';
+    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingCircleHandler);
+  }
+
+  function startDrawingCircleHandler(event) {
+    event.preventDefault();
+    const centerCell = $(event.target);
+    const pointCell = cellFromCoords(7, 8);
+    const cells = determineCircle(centerCell, $(this));
+    console.log(cells);
+  }
+
+  /**
+   * @description determines cells to draw a circle (Bresenham algorithm)
+   * @param {object} startCell
+   * @param {object} endCell
+   */
+  function determineCircle(centerCell, pointCell) {
+    const cellArray = [];
+    const xC = Number(centerCell.attr('data-x'));
+    //const yC = rowsNumber - Number(centerCell.attr('data-y')) + 1;
+    const xP = Number(pointCell.attr('data-x'));
+    const yP = Number(pointCell.attr('data-y'));
+
+    const r = Math.round(Math.sqrt(Math.pow((xP-xC),2)+Math.pow((yP-yC),2)));
+    let x = 0;
+    let y = r;
+    let e = 0;
+    let e1, e2;
+
+    while (x <= y) {
+      cellArray.push(cellFromCoords( (x+xC), (y+yC) ));
+      cellArray.push(cellFromCoords( (y+xC), ((-1*x)+yC) ));
+      cellArray.push(cellFromCoords( ((-1*x)+xC), ((-1*y)+yC) ));
+      cellArray.push(cellFromCoords( ((-1*y)+xC), (x+yC) ));
+      cellArray.push(cellFromCoords( (y+xC), (x+yC) ));
+      cellArray.push(cellFromCoords( (x+xC), ((-1*y)+yC) ));
+      cellArray.push(cellFromCoords( ((-1*y)+xC), ((-1*x)+yC) ));
+      cellArray.push(cellFromCoords( ((-1*x)+xC), (y+yC) ));
+      e1 = e + 2*x +1;
+      e2 = e1 -2*y +1;
+      x = x+1;
+      if (e1 + e2 < 0) {
+        e = e1
+      } else {
+        y = y - 1;
+        e = e2;
+      }
+    }
+
+    return cellArray;
+  }
+
 
 
 
