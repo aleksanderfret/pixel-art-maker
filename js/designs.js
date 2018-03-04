@@ -389,7 +389,7 @@ function pixelArtMaker() {
   function makeGrid(height, width) {
     let grid = '';
     let cellId = '';
-    for (let row = 1; row <= height; row++) {
+    for (let row = height; row >= 1; row--) {
       cellCollection[row-1] = [];
       grid += '<tr>';
       cellId = 'y'+row;
@@ -406,7 +406,7 @@ function pixelArtMaker() {
         'border-color': borderColor,
         'background-color': backgroundColor
       });
-      cellCollection[Math.floor(index/width)].push($(element));
+      cellCollection[rowsNumber-1-Math.floor(index/width)].push($(element));
     });
 
     artboard.mCustomScrollbar('destroy');
@@ -680,15 +680,14 @@ function pixelArtMaker() {
     const y = yCoord-1;
     const neighbors = [];
 
-    if ((y-1 >= 0) && !checkedCells[y-1][x]) {
-      neighbors.push(cellCollection[y-1][x]);
+    if ((y+1 < rowsNumber) && !checkedCells[y+1][x]) {
+      neighbors.push(cellCollection[y+1][x]);
     }
     if ((x+1 < colsNumber) && !checkedCells[y][x+1]) {
       neighbors.push(cellCollection[y][x+1]);
     }
-    if ((y+1 < rowsNumber) && !checkedCells[y+1][x]) {
-
-      neighbors.push(cellCollection[y+1][x]);
+    if ((y-1 >= 0) && !checkedCells[y-1][x]) {
+      neighbors.push(cellCollection[y-1][x]);
     }
     if ((x-1 >= 0) && !checkedCells[y][x-1]) {
       neighbors.push(cellCollection[y][x-1]);
@@ -867,6 +866,7 @@ function pixelArtMaker() {
    * @description determines cells to draw a line (Bresenham algorithm)
    * @param {object} startCell
    * @param {object} endCell
+   * @return {array}
    */
   function determineLine(startCell, endCell) {
     const cellArray = [];
@@ -932,23 +932,69 @@ function pixelArtMaker() {
     pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingCircleHandler);
   }
 
+  /**
+   * @description starts drawing circle
+   * @param {object} event
+   */
   function startDrawingCircleHandler(event) {
     event.preventDefault();
+    $(event.target).trigger('actionStart');
+    const newColor = mainColor;
     const centerCell = $(event.target);
-    const pointCell = cellFromCoords(7, 8);
-    const cells = determineCircle(centerCell, $(this));
-    console.log(cells);
+    const cellMemory = [];
+
+    pixelCanvas.on('mouseenter', 'td', drawCircleHandler);
+
+    /**
+     * @description draws circle and show circle preview
+     * @param {object} event
+     */
+    function drawCircleHandler(event){
+      event.preventDefault();
+
+      if(cellMemory.length>0){
+        cellMemory.forEach(function revertCellBackground(cell, index){
+          cellPainter(cell.cell, cell.oldBackground);
+        });
+        cellMemory.length = 0;
+      }
+
+      const cells = determineCircle(centerCell, $(this));
+      cells.forEach(function (cell, index) {
+        const cellData = {
+          cell: cell,
+          oldBackground: cell.css('background-color'),
+        };
+        cellMemory.push(cellData);
+        cellPainter(cell, newColor);
+      });
+    }
+
+    // Stops drawing circle on mouseup event
+    $('body').one('mouseup', function stopDrawingLineHandler(event) {
+      event.preventDefault();
+      cellMemory.forEach(function revertCellBackground(cell){
+        // Registering mechanism saves cell background as old color
+        // so here is temporary reverting of old background for registering feature
+        cellPainter(cell.cell, cell.oldBackground);
+        cell.cell.trigger('register', [newColor]);
+        cellPainter(cell.cell, newColor);
+      });
+      pixelCanvas.off('mouseenter', 'td', drawCircleHandler);
+      pixelCanvas.trigger('actionStop',['circle']);
+    });
   }
 
   /**
    * @description determines cells to draw a circle (Bresenham algorithm)
    * @param {object} startCell
    * @param {object} endCell
+   * @returns {array}
    */
   function determineCircle(centerCell, pointCell) {
     const cellArray = [];
     const xC = Number(centerCell.attr('data-x'));
-    //const yC = rowsNumber - Number(centerCell.attr('data-y')) + 1;
+    const yC = Number(centerCell.attr('data-y'));
     const xP = Number(pointCell.attr('data-x'));
     const yP = Number(pointCell.attr('data-y'));
 
@@ -978,10 +1024,25 @@ function pixelArtMaker() {
       }
     }
 
-    return cellArray;
+    return uniqueJqueryArray(cellArray);
   }
 
-
+  /**
+   * @description Returns array with unique elements
+   * @param {array} array
+   * @return {array}
+   */
+  function uniqueJqueryArray(array) {
+    const uniqueArray = [];
+    const uniqueJqArray = [];
+    array.forEach(function(element) {
+      if (!uniqueArray.includes(element[0])) {
+        uniqueArray.push(element[0]);
+        uniqueJqArray.push(element);
+      }
+    });
+    return uniqueJqArray;
+  }
 
 
   //////////////////// EYEDROPPER FEATURE ////////////////////
