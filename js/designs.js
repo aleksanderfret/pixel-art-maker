@@ -47,7 +47,6 @@ function pixelArtMaker() {
   let undoEnabled = false;
 
   // Variables
-  let dispalyLabels = false;
   let originalCellColor;
   let currentTool = '';
   const toolToggles = {
@@ -57,6 +56,9 @@ function pixelArtMaker() {
     fill: toggleFillTool,
     line: toggleLineTool
   }
+
+  // ALl cells collection
+  const cellCollection = [];
 
   // Draws initial grid
   makeGrid(rowsNumber, colsNumber);
@@ -386,6 +388,7 @@ function pixelArtMaker() {
     let grid = '';
     let cellId = '';
     for (let row = 1; row <= height; row++) {
+      cellCollection[row-1] = [];
       grid += '<tr>';
       cellId = 'y'+row;
       for (let col = 1; col <= width; col++) {
@@ -396,9 +399,12 @@ function pixelArtMaker() {
       grid += '</tr>';
     }
     pixelCanvas.html(grid);
-    pixelCanvas.find('td').addClass('bordered-cells').css({
-      'border-color': borderColor,
-      'background-color': backgroundColor
+    pixelCanvas.find('td').each(function(index, element) {
+      $(element).addClass('bordered-cells').css({
+        'border-color': borderColor,
+        'background-color': backgroundColor
+      });
+      cellCollection[Math.floor(index/width)].push($(element));
     });
 
     artboard.mCustomScrollbar('destroy');
@@ -635,22 +641,21 @@ function pixelArtMaker() {
     const checkedCells = [];
     const finalArea = [];
     const cellToCheckNeighbors = [];
-
+    for (let i=0; i<rowsNumber; i++) {
+      checkedCells[i] = [];
+    }
     function findNewSameColoredCell(currentCell) {
       const neighbors = findNeighbors(currentCell, checkedCells);
       neighbors.forEach(function addSameNeighbors(neighbor, index) {
-        if (!(checkedCells.includes(neighbor.attr('id')))) {
-          if (neighbor.css('background-color') === currentBackgroundColor) {
-            cellToCheckNeighbors.push(neighbor);
-            finalArea.push(neighbor[0]);
-          }
-          checkedCells.push(neighbor.attr('id'));
-        }
+      if (neighbor.css('background-color') === currentBackgroundColor) {
+        cellToCheckNeighbors.push(neighbor);
+        finalArea.push(neighbor[0]);
+        checkedCells[Number(neighbor.attr('data-y')-1)][Number(neighbor.attr('data-x')-1)] = true;
+      }
       });
     }
-
     finalArea.push(cell);
-    checkedCells.push(cellJQ.attr('id'));
+    checkedCells[Number(cellJQ.attr('data-y')-1)][Number(cellJQ.attr('data-x')-1)] = true;
     cellToCheckNeighbors.push(cellJQ);
     while (cellToCheckNeighbors.length > 0) {
       const tempCell = cellToCheckNeighbors.pop();
@@ -668,19 +673,23 @@ function pixelArtMaker() {
   function findNeighbors(currentCell, checkedCells) {
     const xCoord = Number(currentCell.attr('data-x'));
     const yCoord = Number(currentCell.attr('data-y'));
+    // Coords for finding cell in cellCollection array
+    const x = xCoord-1;
+    const y = yCoord-1;
     const neighbors = [];
 
-    if(!checkedCells.includes('y'+(yCoord-1)+'x'+xCoord)) {
-      neighbors.push(currentCell.parent().prev().children().eq(xCoord-1));
+    if ((y-1 >= 0) && !checkedCells[y-1][x]) {
+      neighbors.push(cellCollection[y-1][x]);
     }
-    if(!checkedCells.includes('y'+yCoord+'x'+(xCoord+1))) {
-      neighbors.push(currentCell.next());
+    if ((x+1 < colsNumber) && !checkedCells[y][x+1]) {
+      neighbors.push(cellCollection[y][x+1]);
     }
-    if(!checkedCells.includes('y'+(yCoord+1)+'x'+xCoord)) {
-      neighbors.push(currentCell.parent().next().children().eq(xCoord-1));
+    if ((y+1 < rowsNumber) && !checkedCells[y+1][x]) {
+
+      neighbors.push(cellCollection[y+1][x]);
     }
-    if(!checkedCells.includes('y'+yCoord+'x'+(xCoord-1))) {
-      neighbors.push(currentCell.prev());
+    if ((x-1 >= 0) && !checkedCells[y][x-1]) {
+      neighbors.push(cellCollection[y][x-1]);
     }
     return neighbors;
   }
