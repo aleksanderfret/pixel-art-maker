@@ -18,6 +18,7 @@ function pixelArtMaker() {
   const bgColor = $('#bg-color');
   const bdColor = $('#bd-color');
   const brColor = $('#br-color');
+  const cellSizeInput = $('#cellSizeRange');
 
   // Captures initial values from DOM elements
   const initialBrushColor = mainColorPicker.val();
@@ -25,7 +26,7 @@ function pixelArtMaker() {
   const initialBorderColor = '#d3d3d3';
   const initialColsNumber = pixelCanvasInputWidth.val();
   const initialRowsNumber = pixelCanvasInputHeight.val();
-  const initialCellDimension = 20;
+  const initialCellDimension = cellSizeInput.val();
   const initialColor = mainColorPicker.val();
 
   // Sets current values based on initial values
@@ -54,9 +55,9 @@ function pixelArtMaker() {
     erase: toggleEraseTool,
     eyedropper: toggleEyedropperTool,
     fill: toggleFillTool,
-    line: toggleLineTool,
-    circle: toggleCircleTool,
-    rectangle: toggleRectangleTool
+    line: toggleShapeTool,
+    circle: toggleShapeTool,
+    rectangle: toggleShapeTool
   }
 
   // ALl cells collection
@@ -355,30 +356,28 @@ function pixelArtMaker() {
 
 
   //////////////////// DRAW GRID FEATURES ////////////////////
-  /**
-   * @description Calculates cell dimension to fit square grid to screen
-   * @param {number} colNumber - number of columns
-   * @return {number}
-   */
-  function calculateCellDimension(colNumber) {
-    const boardWidth = wrapper.width();
-    const cellWidthCalculated = Math.floor(boardWidth/colNumber);
-    cellDimension = Math.min(cellWidthCalculated, initialCellDimension);
-    return cellDimension;
-  }
+  cellSizeInput.on('change', function setCellDimension() {
+    cellDimension = $(this).val();
+    setCellSize(cellDimension);
+    console.log(cellDimension);
+  });
 
   /**
    * @description Sets size of pixel-art's square cells
-   * @param {object} cellContainer
    * @param {number} cellDimension
    */
-  function setCellSize(cellContainer, cellDimension) {
-    cellContainer.find('td').css({
-      'width': cellDimension,
-      'height': cellDimension
+  function setCellSize(cellDimension) {
+    pixelCanvas.find('td').css({
+      'width': cellDimension +'px',
+      'height': cellDimension +'px',
+      'min-width': cellDimension +'px',
+      'max-width': cellDimension +'px',
+      'min-height': cellDimension +'px'
     });
-   cellContainer.find('tr').css({
-      'height': cellDimension
+    pixelCanvas.find('tr').css({
+      'height': cellDimension +'px',
+      'min-height': cellDimension +'px',
+      'max-height': cellDimension +'px'
     });
   }
 
@@ -390,13 +389,21 @@ function pixelArtMaker() {
   function makeGrid(height, width) {
     let grid = '';
     let cellId = '';
+    const tdStyle =
+      'style="width: '
+      + cellDimension
+      + 'px; max-width: '
+      + cellDimension
+      + 'px; min-width: '
+      + cellDimension + 'px;"';
+    const trStyle = 'style="height:'+ cellDimension +'px;"';
     for (let row = height; row >= 1; row--) {
       cellCollection[row-1] = [];
-      grid += '<tr>';
+      grid += '<tr ' + trStyle + '>';
       cellId = 'y'+row;
       for (let col = 1; col <= width; col++) {
         cellId = cellId + 'x'+col;
-        grid += '<td id="'+cellId+'" data-y="'+row+'" data-x="'+col+'"></td>';
+        grid += '<td id="'+cellId+'" data-y="'+row+'" data-x="'+col+'" ' + tdStyle + '></td>';
         cellId = 'y'+row;
       }
       grid += '</tr>';
@@ -461,11 +468,6 @@ function pixelArtMaker() {
   pixelCanvas.on('resize', function() {
     centerVerticallyOrScrollbarY();
   });
-
-  // Sets cell size when window size changed
-  // $(window).on('resize', function cellSizeChangeHandler() {
-  //   setCellSize(pixelCanvas, calculateCellDimension(colsNumber));
-  // })
 
 
 
@@ -600,7 +602,7 @@ function pixelArtMaker() {
     $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
       event.preventDefault();
       pixelCanvas.off('mouseover', 'td', paintHandler);
-      pixelCanvas.trigger('actionStop',['brush']);
+      pixelCanvas.trigger('actionStop', [currentTool]);
     });
   }
 
@@ -708,7 +710,7 @@ function pixelArtMaker() {
         cellPainter(el, backgroundColor);
       }
     });
-    pixelCanvas.trigger('actionStop',['brush']);
+    pixelCanvas.trigger('actionStop',['clear']);
   });
 
   /**
@@ -800,34 +802,34 @@ function pixelArtMaker() {
 
 
 
-  //////////////////// LINE FEATURE ////////////////////
-  /**
-   * @description Toggles line tool
+  //////////////////// SHAPES FEATURE ////////////////////
+   /**
+   * @description Toggles shape tool
    * @param {boolean} toolState
    */
-  function toggleLineTool(toolState) {
+  function toggleShapeTool(toolState) {
     const toggleMethod = (toolState) ? 'on' : 'off';
-    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingLineHandler);
+    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingShapeHandler);
   }
 
   /**
-   * @description starts drawing line
+   * @description starts drawing shape
    * @param {object} event
    */
-  function startDrawingLineHandler(event) {
+  function startDrawingShapeHandler(event) {
     event.preventDefault();
     $(event.target).trigger('actionStart');
     const newColor = mainColor;
     const startCell = $(event.target);
     const cellMemory = [];
 
-    pixelCanvas.on('mouseenter', 'td', drawLineHandler);
+    pixelCanvas.on('mouseenter', 'td', drawShapeHandler);
 
     /**
-     * @description draws line and show line preview
+     * @description draws shape and show shape preview
      * @param {object} event
      */
-    function drawLineHandler(event){
+    function drawShapeHandler(event){
       event.preventDefault();
 
       if(cellMemory.length>0){
@@ -837,7 +839,21 @@ function pixelArtMaker() {
         cellMemory.length = 0;
       }
 
-      const cells = determineLine(startCell, $(this));
+      // Chooses proper method to determine shape cells
+      switch(currentTool) {
+        case 'circle':
+          cells = determineCircle(startCell, $(this));
+          break;
+        case 'rectangle':
+          cells = determineRectangle(startCell, $(this));
+          break;
+        case 'line':
+          cells = determineLine(startCell, $(this));
+          break;
+        default:
+          null;
+      }
+
       cells.forEach(function (cell, index) {
         const cellData = {
           cell: cell,
@@ -849,7 +865,7 @@ function pixelArtMaker() {
     }
 
     // Stops drawing line on mouseup event
-    $('body').one('mouseup', function stopDrawingLineHandler(event) {
+    $('body').one('mouseup', function stopDrawingShapeHandler(event) {
       event.preventDefault();
       cellMemory.forEach(function(cell){
         // Registering mechanism saves cell background as old color
@@ -858,8 +874,8 @@ function pixelArtMaker() {
         cell.cell.trigger('register', [newColor]);
         cellPainter(cell.cell, newColor);
       });
-      pixelCanvas.off('mouseenter', 'td', drawLineHandler);
-      pixelCanvas.trigger('actionStop',['line']);
+      pixelCanvas.off('mouseenter', 'td', drawShapeHandler);
+      pixelCanvas.trigger('actionStop', [currentTool]);
     });
   }
 
@@ -871,10 +887,10 @@ function pixelArtMaker() {
    */
   function determineLine(startCell, endCell) {
     const cellArray = [];
-    let x1 = Number(startCell.attr('data-x'));
-    let y1 = Number(startCell.attr('data-y'));
-    const x2 = Number(endCell.attr('data-x'));
-    const y2 = Number(endCell.attr('data-y'));
+    let x1 = Number(startCell.attr('data-x'))-1;
+    let y1 = Number(startCell.attr('data-y'))-1;
+    const x2 = Number(endCell.attr('data-x'))-1;
+    const y2 = Number(endCell.attr('data-y'))-1;
     const deltaX = Math.abs(x1-x2);
     const deltaY = Math.abs(y1-y2);
     const stepX = (x1 < x2) ? 1 : -1;
@@ -908,96 +924,21 @@ function pixelArtMaker() {
       }
     }
 
-    return cellArray;
-  }
-
-  /**
-   * @description Finds cell from coordinates
-   * @param {number} x
-   * @param {number} y
-   */
-  function cellFromCoords(x, y) {
-    const cell = pixelCanvas.find('td[data-x="' + x + '"][data-y="' + y + '"]');
-    return cell;
-  }
-
-
-
-  //////////////////// CIRCLE FEATURE ////////////////////
-  /**
-   * @description Toggles circle tool
-   * @param {boolean} toolState
-   */
-  function toggleCircleTool(toolState) {
-    const toggleMethod = (toolState) ? 'on' : 'off';
-    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingCircleHandler);
-  }
-
-  /**
-   * @description starts drawing circle
-   * @param {object} event
-   */
-  function startDrawingCircleHandler(event) {
-    event.preventDefault();
-    $(event.target).trigger('actionStart');
-    const newColor = mainColor;
-    const centerCell = $(event.target);
-    const cellMemory = [];
-
-    pixelCanvas.on('mouseenter', 'td', drawCircleHandler);
-
-    /**
-     * @description draws circle and show circle preview
-     * @param {object} event
-     */
-    function drawCircleHandler(event){
-      event.preventDefault();
-
-      if(cellMemory.length>0){
-        cellMemory.forEach(function revertCellBackground(cell, index){
-          cellPainter(cell.cell, cell.oldBackground);
-        });
-        cellMemory.length = 0;
-      }
-
-      const cells = determineCircle(centerCell, $(this));
-      cells.forEach(function (cell, index) {
-        const cellData = {
-          cell: cell,
-          oldBackground: cell.css('background-color'),
-        };
-        cellMemory.push(cellData);
-        cellPainter(cell, newColor);
-      });
-    }
-
-    // Stops drawing circle on mouseup event
-    $('body').one('mouseup', function stopDrawingLineHandler(event) {
-      event.preventDefault();
-      cellMemory.forEach(function revertCellBackground(cell){
-        // Registering mechanism saves cell background as old color
-        // so here is temporary reverting of old background for registering feature
-        cellPainter(cell.cell, cell.oldBackground);
-        cell.cell.trigger('register', [newColor]);
-        cellPainter(cell.cell, newColor);
-      });
-      pixelCanvas.off('mouseenter', 'td', drawCircleHandler);
-      pixelCanvas.trigger('actionStop',['circle']);
-    });
+    return uniqueNotNullArray(cellArray);
   }
 
   /**
    * @description determines cells to draw a circle (Bresenham algorithm)
-   * @param {object} startCell
-   * @param {object} endCell
+   * @param {object} centerCell
+   * @param {object} pointCell
    * @returns {array}
    */
   function determineCircle(centerCell, pointCell) {
     const cellArray = [];
-    const xC = Number(centerCell.attr('data-x'));
-    const yC = Number(centerCell.attr('data-y'));
-    const xP = Number(pointCell.attr('data-x'));
-    const yP = Number(pointCell.attr('data-y'));
+    const xC = Number(centerCell.attr('data-x'))-1;
+    const yC = Number(centerCell.attr('data-y'))-1;
+    const xP = Number(pointCell.attr('data-x'))-1;
+    const yP = Number(pointCell.attr('data-y'))-1;
 
     const r = Math.round(Math.sqrt(Math.pow((xP-xC),2)+Math.pow((yP-yC),2)));
     let x = 0;
@@ -1025,44 +966,62 @@ function pixelArtMaker() {
       }
     }
 
-    return uniqueJqueryArray(cellArray);
+    return uniqueNotNullArray(cellArray);
   }
 
   /**
-   * @description Returns array with unique elements
-   * @param {array} array
-   * @return {array}
+   * @description determines cells to draw a rectangle
+   * @param {object} startCell
+   * @param {object} endCell
+   * @returns {array}
    */
-  function uniqueJqueryArray(array) {
-    const uniqueArray = [];
-    const uniqueJqArray = [];
-    array.forEach(function(element) {
-      if (!uniqueArray.includes(element[0])) {
-        uniqueArray.push(element[0]);
-        uniqueJqArray.push(element);
+  function determineRectangle(startCell, endCell) {
+    const cellsArray = [];
+    // calculate array indexes from coords
+    const x1 = Number(startCell.attr('data-x'))-1;
+    const y1 = Number(startCell.attr('data-y'))-1;
+    const x2 = Number(endCell.attr('data-x'))-1;
+    const y2 = Number(endCell.attr('data-y'))-1;
+
+    const deltaX = x1-x2;
+    const deltaY = y1-y2;
+
+    cellsArray.push(cellCollection[y1][x1]);
+    cellsArray.push(cellCollection[y2][x1]);
+    for (let i=1; i<=Math.abs(deltaX); i++) {
+      if (deltaX<0) {
+        cellsArray.push(cellCollection[y1][x1+i]);
+        cellsArray.push(cellCollection[y2][x1+i]);
+      } else {
+        cellsArray.push(cellCollection[y1][x1-i]);
+        cellsArray.push(cellCollection[y2][x1-i]);
       }
-    });
-    return uniqueJqArray;
-  }
+    }
 
-
-
-   //////////////////// RECTANGLE FEATURE ////////////////////
-  /**
-   * @description Toggles rectangle tool
-   * @param {boolean} toolState
-   */
-  function toggleRectangleTool(toolState) {
-    const toggleMethod = (toolState) ? 'on' : 'off';
-    pixelCanvas[toggleMethod]('mousedown', 'td', startDrawingRectangleHandler);
+    for (let i=1; i<Math.abs(deltaY); i++){
+      if (deltaY<0) {
+        cellsArray.push(cellCollection[y1+i][x1]);
+        cellsArray.push(cellCollection[y1+i][x2]);
+      } else {
+        cellsArray.push(cellCollection[y1-i][x1]);
+        cellsArray.push(cellCollection[y1-i][x2]);
+      }
+    }
+ 	  return uniqueNotNullArray(cellsArray);
   }
 
   /**
-   * @description starts drawing rectangle
-   * @param {object} event
+   * @description Finds cell from coordinates
+   * @param {number} x
+   * @param {number} y
+   * @return {object}
    */
-  function startDrawingRectangleHandler(event) {
-    console.log('rectangle');
+  function cellFromCoords(x, y) {
+    let cell = null;
+    if (cellCollection[y] && cellCollection[y][x]) {
+      cell = cellCollection[y][x];
+    }
+    return cell;
   }
 
 
@@ -1115,6 +1074,21 @@ function pixelArtMaker() {
   }
 
   /**
+   * @description Returns array with unique elements
+   * @param {array} array
+   * @return {array}
+   */
+  function uniqueNotNullArray(array) {
+    const uniqueArray = [];
+    array.forEach(function(element) {
+      if (element !== null && !uniqueArray.includes(element)) {
+        uniqueArray.push(element);
+      }
+    });
+    return uniqueArray;
+  }
+
+  /**
    * @description Turns on custom scrollbars
    * Source: jQuery custom content scroller from http://manos.malihu.gr/jquery-custom-content-scroller/
    */
@@ -1127,7 +1101,6 @@ function pixelArtMaker() {
   }
 }
 
-// TODO fix fill recursive overstacking
 // TODO wand (the same tool)
 // TODO wand (all the same tool)
 // TODO colors history

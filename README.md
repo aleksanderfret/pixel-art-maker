@@ -2,16 +2,14 @@
 This graphic application was created as a project within the Google Scholarship Programm. It provides various functionalities to draw on grid-based canvas. Used technologies: html, css, js, jQuery.
 
 ## Version
-2.5.0 - 2018.02.04
+3.0.0 - 2018.03.05
 
 ## Dependecies
 - [jQuery](http://jquery.com/)
 - [jQuery custom content scroller](http://manos.malihu.gr/jquery-custom-content-scroller/)
 
 ## ToDo
-- Drawing rectangles
 - Changing brush size
-- Changing cell size
 - Colors history
 - Refactoring of cell painting mechanism to better fit for all tools
 - Convert project to ES6
