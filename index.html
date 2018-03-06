@@ -94,8 +94,8 @@
         <div class="toolButton">
           <input
             type="range"
-            class="cellSizeRange"
-            id="cellSizeRange"
+            class="cell-sizer"
+            id="cell-sizer"
             title="Set cell size"
             max="25"
             min="5"
@@ -259,7 +259,7 @@
       <li id="colors" class="colors status-info">
         <div class="status-label">colors:</div>
         <ul id="markers" class="markers">
-          <li><span id="br-color" class="status-color-box br-color"></span><span>Brush</span></li>
+          <li><span id="tl-color" class="status-color-box tl-color"></span><span>Tool</span></li>
           <li><span id="bg-color" class="status-color-box bg-color"></span><span>Background</span></li>
           <li><span id="bd-color" class="status-color-box bd-color"></span><span>Borders</span></li>
         </ul>
@@ -302,6 +302,10 @@
       <li class="toolInstruction">
         <span class="toolImage"><img src="img/icons/grid.svg" alt="Draw grid"></span>
         <span class="toolDescription">draw canvas grid</span>
+      </li>
+      <li class="toolInstruction">
+        <span class="toolImage cell-sizer-help"><img src="img/icons/cell-sizer.png" alt="Set cell size"></span>
+        <span class="toolDescription">set cell size</span>
       </li>
       <li class="toolInstruction">
         <span class="toolImage"><img src="img/icons/borders_off.svg" alt="Hide borders"></span>

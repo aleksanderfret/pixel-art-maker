@@ -17,8 +17,8 @@ function pixelArtMaker() {
   const colorborders = $('#color-borders');
   const bgColor = $('#bg-color');
   const bdColor = $('#bd-color');
-  const brColor = $('#br-color');
-  const cellSizeInput = $('#cellSizeRange');
+  const tlColor = $('#tl-color');
+  const cellSizeInput = $('#cell-sizer');
 
   // Captures initial values from DOM elements
   const initialBrushColor = mainColorPicker.val();
@@ -77,9 +77,11 @@ function pixelArtMaker() {
     mainColor = initialColor;
     colsNumber = initialColsNumber;
     rowsNumber = initialRowsNumber;
+    cellDimension = initialCellDimension;
     displayBorders = true;
     $('#switch-borders').find('img').attr('src', 'img/icons/borders_off.svg');
 
+    cellSizeInput[0].value = cellDimension;
     mainColorPicker[0].value = mainColor;
     pixelCanvasInputHeight.val(rowsNumber);
     pixelCanvasInputWidth.val(colsNumber);
@@ -88,7 +90,7 @@ function pixelArtMaker() {
     resetActionsHistory();
     bgColor.css('background-color', backgroundColor);
     bdColor.css('background-color', borderColor);
-    brColor.css('background-color', brushColor);
+    tlColor.css('background-color', mainColor);
   });
 
 
@@ -177,7 +179,11 @@ function pixelArtMaker() {
     pixelCanvasCopy.css('border-collapse','collapse');
     pixelCanvasCopy.find('td').css({
       'width': cellWidth,
-      'height': cellHeight
+      'height': cellHeight,
+			'max-width': cellWidth,
+			'max-height': cellHeight,
+			'min-height': cellHeight,
+			'min-width': cellWidth
     });
     if(displayBorders) {
       pixelCanvasCopy.find('td').css('border', '1px solid '+ borderColor);
@@ -359,7 +365,9 @@ function pixelArtMaker() {
   cellSizeInput.on('change', function setCellDimension() {
     cellDimension = $(this).val();
     setCellSize(cellDimension);
-    console.log(cellDimension);
+    artboard.mCustomScrollbar('destroy');
+    turnOnScrollbars();
+    centerVerticallyOrScrollbarY();
   });
 
   /**
@@ -420,7 +428,6 @@ function pixelArtMaker() {
     artboard.mCustomScrollbar('destroy');
     turnOnScrollbars();
     centerVerticallyOrScrollbarY();
-    //setCellSize(pixelCanvas, calculateCellDimension(width));
   }
 
   // Ensures that height and width will match the min and max attributes
@@ -451,7 +458,6 @@ function pixelArtMaker() {
   function centerVerticallyOrScrollbarY() {
     const artboardHeight = artboard.height();
     const canvasHeight = pixelCanvas.height();
-    //debugger;
     if (artboardHeight > canvasHeight ) {
       $('.mCSB_container').addClass('vertical-aligner');
     } else {
@@ -474,7 +480,7 @@ function pixelArtMaker() {
   //////////////////// CELL BORDERS FEATURES ////////////////////
   // Sets border color on button color borders
   colorborders.on('click', function borderColorChangeHandler() {
-    borderColor = mainColorPicker.val();
+    borderColor = mainColor;
     pixelCanvas.find('td').css('border-color', borderColor);
     bdColor.css('background-color', borderColor);
   });
@@ -497,7 +503,7 @@ function pixelArtMaker() {
   //////////////////// BACKGROUND COLOR FEATURES ////////////////////
   // Changes cell background color on fill button click
   $('#color-background').on('click', function canvasBbackgroundColorChangeHandler() {
-    cellBackgroundChanger(backgroundColor, mainColorPicker.val());
+    cellBackgroundChanger(backgroundColor, mainColor);
   });
 
   // Clean background color on button click
@@ -535,6 +541,7 @@ function pixelArtMaker() {
   // Sets main color value on colorPicker change
   mainColorPicker.on('change', function colorChangeHandler() {
     mainColor = $(this).val();
+    updateToolColorStatus(mainColor);
   });
 
   // Sets swatch color as a main color
@@ -542,9 +549,22 @@ function pixelArtMaker() {
     const newColor = rgb2hex($(this).css('background-color'));
     mainColorPicker.val(newColor);
     mainColor = newColor;
+    updateToolColorStatus(mainColor);
   })
 
-  // Runs tools: brush, erase, fill or eyedropper
+  /**
+   * @description Updates tool color on status bar
+   * @param {string} color
+   */
+	function updateToolColorStatus(color) {
+		if (currentTool) {
+      if (toolToggles[currentTool] !== undefined && currentTool !== 'erase' && currentTool !== 'eyedropper') {
+				tlColor.css('background-color', color);
+      }
+    }
+	}
+
+  // Runs tools: brush, erase, fill, line, circle, rectangle or eyedropper
   $('.tool').on('click', function onToolClickHandler(event) {
     // Stop current tool
     if (currentTool) {
@@ -557,6 +577,7 @@ function pixelArtMaker() {
     currentTool = $(event.currentTarget).attr('id');
     if (currentTool) {
       if (toolToggles[currentTool] !== undefined) {
+        tlColor.css('background-color', mainColor);
         wrapper.addClass(currentTool + '-cursor');
         $(this).addClass('active-tool');
         toolToggles[currentTool](true);
@@ -564,6 +585,7 @@ function pixelArtMaker() {
         currentTool = '';
       }
     }
+    updateToolColorStatus(mainColor);
   });
 
   /**
@@ -588,9 +610,6 @@ function pixelArtMaker() {
 
   // Starts painting
   function startPaintingHandler(event) {
-    if (currentTool === 'brush') {
-      brColor.css('background-color', mainColor);
-    }
     event.preventDefault();
     $(event.target).trigger('actionStart');
 
@@ -1037,7 +1056,7 @@ function pixelArtMaker() {
   }
 
   /**
-   * @description Turns on brush preview
+   * @description Gets color from a cell
    * @param {object} event
    */
   function getColorHandler(event) {
