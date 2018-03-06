@@ -119,10 +119,9 @@ function pixelArtMaker() {
    * @param {string} feature - name of feature that requests the image; available values: 'print' and 'save
    */
   function createTemporaryImage(feature) {
-    const strokeWidth = displayBorders ? 1 : 0;
-    // Helper variables (when using HTML inside svg there are strange problems with cell borders)
+    const strokeWidth = 1;
     const correctedCellDimensionWidth = cellDimension - strokeWidth*3;
-    const correctedCellDimensionHeight  = displayBorders ? cellDimension - strokeWidth*3 : cellDimension - 2;
+    const correctedCellDimensionHeight = cellDimension - strokeWidth*3;
     const correctedCanvasWidth = cellDimension*colsNumber+strokeWidth;
     const correctedCanvasHeight = cellDimension*rowsNumber+strokeWidth;
 
@@ -159,12 +158,12 @@ function pixelArtMaker() {
    */
   function prepareSvgData(canvasHTML, width, height) {
     const data = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="'+ width +'" height="'+ height +'">' +
-         '<foreignObject width="100%" height="100%">' +
-         '<div xmlns="http://www.w3.org/1999/xhtml">' +
-         canvasHTML +
-         '</div>' +
-         '</foreignObject>' +
-         '</svg>';
+    '<foreignObject width="100%" height="100%">' +
+    '<div xmlns="http://www.w3.org/1999/xhtml">' +
+    canvasHTML +
+    '</div>' +
+    '</foreignObject>' +
+    '</svg>';
     return data;
   }
 
@@ -187,6 +186,9 @@ function pixelArtMaker() {
     });
     if(displayBorders) {
       pixelCanvasCopy.find('td').css('border', '1px solid '+ borderColor);
+    } else {
+      // When using HTML inside svg there are strange problems without cell borders
+      pixelCanvasCopy.find('td').css('border', '1px solid transparent');
     }
     return pixelCanvasCopy;
   }
