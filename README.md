@@ -2,7 +2,7 @@
 This graphic application was created as a project within the Google Scholarship Programm. It provides various functionalities to draw on grid-based canvas. Used technologies: html, css, js, jQuery.
 
 ## Version
-3.0.1 - 2018.03.06
+3.0.2 - 2018.03.06
 
 ## Dependecies
 - [jQuery](http://jquery.com/)
@@ -13,9 +13,6 @@ This graphic application was created as a project within the Google Scholarship 
 - Colors history
 - Refactoring of cell painting mechanism to better fit for all tools
 - Convert project to ES6
-
-## Known issue
-- Brush and Erase previews disappear
 
 ## Contribution
 This project was #madewithudacity and #googleudacityscholars. Thank you.

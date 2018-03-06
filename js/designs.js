@@ -305,7 +305,6 @@ function pixelArtMaker() {
     const currentCell = $(coloredCell);
     const currentCellId = currentCell.attr('id');
     const backgroundToRegister = currentCell.css('background-color');
-
     // Clear redo history
     actionsRedoHistory.length = 0;
     setRedo(false);
@@ -518,7 +517,6 @@ function pixelArtMaker() {
    * @param {string} newColor
    */
   function cellBackgroundChanger(oldColor, newColor){
-    pixelCanvas.trigger('actionStart');
     let counter = 0;
     pixelCanvas.find('td').each(function filterCellsWithOldBackground(index, el) {
       if (rgb2hex($(el).css('background-color')) === oldColor) {
@@ -588,43 +586,6 @@ function pixelArtMaker() {
     updateToolColorStatus(mainColor);
   });
 
-  /**
-   * @description paints cell
-   * @param {string} cellToPaint - cell
-   * @param {string} color - new color
-   */
-  function cellPainter(cellToPaint, color) {
-    $(cellToPaint).css('background-color', color);
-  }
-
-  /**
-   * @description Changes color of the grid cell
-   * @param {object} event
-   */
-  function paintHandler(event) {
-    event.preventDefault();
-    const newColor = (currentTool === 'erase') ? backgroundColor : mainColor;
-    $(event.target).trigger('register', [newColor]);
-    cellPainter(event.target, newColor);
-  }
-
-  // Starts painting
-  function startPaintingHandler(event) {
-    event.preventDefault();
-    $(event.target).trigger('actionStart');
-
-    // Paints current cell and additionally starts handling painting on mouseover event
-    paintHandler(event);
-    pixelCanvas.on('mouseover', 'td', paintHandler);
-
-    // Stops painting on mouseup event
-    $('body').one('mouseup mouseleave', function stopPaintingHandler(event) {
-      event.preventDefault();
-      pixelCanvas.off('mouseover', 'td', paintHandler);
-      pixelCanvas.trigger('actionStop', [currentTool]);
-    });
-  }
-
 
 
   //////////////////// FILL FEATURE ////////////////////
@@ -643,7 +604,6 @@ function pixelArtMaker() {
    */
   function fillHandler(event) {
     event.preventDefault();
-    $(event.target).trigger('actionStart');
     const newColor = mainColor;
     const cells = findCells(event.target);
     cells.forEach(function fillSameCells(cell, index) {
@@ -722,7 +682,6 @@ function pixelArtMaker() {
   //////////////////// BRUSH FEATURE ////////////////////
   // Clears painting
   $('#paint-cleaner').on('click', function cellBrushCleanHandler() {
-    pixelCanvas.trigger('actionStart');
     pixelCanvas.find('td').each(function paintingCleaner(index, el) {
       if (rgb2hex($(el).css('background-color')) !== backgroundColor) {
         $(el).trigger('register',[backgroundColor]);
@@ -740,7 +699,8 @@ function pixelArtMaker() {
     const toggleMethod = (toolState) ? 'on' : 'off';
     pixelCanvas[toggleMethod]('mousedown', 'td', startPaintingHandler);
     pixelCanvas[toggleMethod]('mouseenter mouseleave', 'td', brushPreviewHandler);
-    pixelCanvas[toggleMethod]('actionStart actionStop', 'td', toggleBrushPreviewHandler);
+    pixelCanvas[toggleMethod]('actionStart', 'td', toggleBrushPreviewHandler);
+    pixelCanvas[toggleMethod]('actionStop', toggleBrushPreviewHandler);
   }
 
   /**
@@ -777,6 +737,50 @@ function pixelArtMaker() {
     });
   }
 
+  /**
+   * @description paints cell
+   * @param {string} cellToPaint - cell
+   * @param {string} color - new color
+   */
+  function cellPainter(cellToPaint, color) {
+    $(cellToPaint).css('background-color', color);
+  }
+
+  /**
+   * @description Changes color of the grid cell
+   * @param {object} event
+   */
+  function paintHandler(event) {
+    event.preventDefault();
+    const newColor = (currentTool === 'erase') ? backgroundColor : mainColor;
+    $(event.target).trigger('register', [newColor]);
+    cellPainter(event.target, newColor);
+  }
+
+  // Starts painting
+  function startPaintingHandler(event) {
+    event.preventDefault();
+    $(event.target).trigger('actionStart');
+
+    // Paints current cell and additionally starts handling painting on mouseover event
+    paintHandler(event);
+    pixelCanvas.on('mouseover', 'td', paintHandler);
+
+    // Stops painting on mouseup or mouseleave event
+    $('body').on('mouseup mouseleave', stopPaintingHandler);
+  }
+
+  /**
+   * @description Stop painting handler
+   * @param {object} event
+   */
+  function stopPaintingHandler(event) {
+      event.preventDefault();
+    $('body').off('mouseup mouseleave', stopPaintingHandler);
+      pixelCanvas.off('mouseover', 'td', paintHandler);
+      pixelCanvas.trigger('actionStop', [currentTool]);
+  }
+
 
 
   //////////////////// ERASE FEATURE ////////////////////
@@ -788,7 +792,8 @@ function pixelArtMaker() {
     const toggleMethod = (toolState) ? 'on' : 'off';
     pixelCanvas[toggleMethod]('mousedown', 'td', startPaintingHandler);
     pixelCanvas[toggleMethod]('mouseenter mouseleave', 'td', erasePreviewHandler);
-    pixelCanvas[toggleMethod]('actionStart actionStop', 'td', toggleErasePreviewHandler);
+    pixelCanvas[toggleMethod]('actionStart', 'td', toggleErasePreviewHandler);
+    pixelCanvas[toggleMethod]('actionStop', toggleErasePreviewHandler);
   }
 
   /**
@@ -837,7 +842,6 @@ function pixelArtMaker() {
    */
   function startDrawingShapeHandler(event) {
     event.preventDefault();
-    $(event.target).trigger('actionStart');
     const newColor = mainColor;
     const startCell = $(event.target);
     const cellMemory = [];
