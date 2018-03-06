@@ -19,6 +19,7 @@ function pixelArtMaker() {
   const bdColor = $('#bd-color');
   const tlColor = $('#tl-color');
   const cellSizeInput = $('#cell-sizer');
+  const borderSwitch = $('#switch-borders');
 
   // Captures initial values from DOM elements
   const initialBrushColor = mainColorPicker.val();
@@ -78,8 +79,6 @@ function pixelArtMaker() {
     colsNumber = initialColsNumber;
     rowsNumber = initialRowsNumber;
     cellDimension = initialCellDimension;
-    displayBorders = true;
-    $('#switch-borders').find('img').attr('src', 'img/icons/borders_off.svg');
 
     cellSizeInput[0].value = cellDimension;
     mainColorPicker[0].value = mainColor;
@@ -418,12 +417,14 @@ function pixelArtMaker() {
       grid += '</tr>';
     }
     pixelCanvas.html(grid);
+    cellBorderSwitch(true);
     pixelCanvas.find('td').each(function(index, element) {
-      $(element).addClass('bordered-cells').css({
+      $(element).css({
         'border-color': borderColor,
         'background-color': backgroundColor
       });
       cellCollection[rowsNumber-1-Math.floor(index/width)].push($(element));
+
     });
 
     artboard.mCustomScrollbar('destroy');
@@ -487,18 +488,26 @@ function pixelArtMaker() {
   });
 
    // Hides or shows cell borders
-   $('#switch-borders').on('click', function cellBorderSwitchHandler() {
-    pixelCanvas.find('td').toggleClass('bordered-cells');
-    if (displayBorders) {
-      $(this).attr('title', 'Show borders.');
-      $(this).find('img').attr('src', 'img/icons/borders_on.svg');
-    } else {
-      $(this).attr('title', 'Hide borders.');
-      $(this).find('img').attr('src', 'img/icons/borders_off.svg');
-    }
-    displayBorders = !displayBorders;
-  });
+   $('#switch-borders').on('click', function cellBorderSwitchHandler(){
+    cellBorderSwitch(!displayBorders);
+   });
 
+   /**
+   * @description Controls displaying of borders
+   * @param {boolean} ifDisplay
+   */
+   function cellBorderSwitch(ifDisplay) {
+    displayBorders = ifDisplay;
+    if (!displayBorders) {
+      pixelCanvas.find('td').removeClass('bordered-cells');
+      borderSwitch.attr('title', 'Show borders.');
+      borderSwitch.find('img').attr('src', 'img/icons/borders_on.svg');
+    } else {
+      pixelCanvas.find('td').addClass('bordered-cells');
+      borderSwitch.attr('title', 'Hide borders.');
+      borderSwitch.find('img').attr('src', 'img/icons/borders_off.svg');
+    }
+  }
 
 
   //////////////////// BACKGROUND COLOR FEATURES ////////////////////
