@@ -551,6 +551,10 @@ label {
   }
 }
 
+.status-link,
+.status-link:visited {
+  color: #fff;
+}
 
 
 /* ############### HEPLPERS ############### */
