@@ -11,6 +11,9 @@ JavaScript, jQuery, CSS, HTML5
 - [jQuery](http://jquery.com/)
 - [jQuery custom content scroller](http://manos.malihu.gr/jquery-custom-content-scroller/)
 
+## Game screenshoot
+![pixel art maker](https://user-images.githubusercontent.com/25374390/37851304-af8013fc-2ede-11e8-8c56-2986a82c8151.jpg)
+
 ## ToDo
 - Changing brush size
 - Colors history
