@@ -2,7 +2,7 @@
 This graphic application was created as a project within the Google Scholarship Programm. It provides various functionalities to draw on grid-based canvas. Used technologies: html, css, js, jQuery.
 
 ## Version
-3.0.5 - 2018.03.23
+3.0.6 - 2018.05.01
 
 ##Technologies
 JavaScript, jQuery, CSS, HTML5

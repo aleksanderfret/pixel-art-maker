@@ -519,7 +519,6 @@ function pixelArtMaker() {
   // Clean background color on button click
   $('#clean-background').on('click', function cellBackgroundCleanHandler() {
     cellBackgroundChanger(backgroundColor, initialBackgroundColor);
-    mainColor = initialBackgroundColor;
   });
 
   /**
